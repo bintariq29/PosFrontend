@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-brands',
   imports: [],
   templateUrl: './brands.component.html',
-  styles: ``
+  styles: ``,
+  standalone: true
 })
 export class BrandsComponent {
 

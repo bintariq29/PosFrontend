@@ -32,6 +32,28 @@ import { AppComponent } from './app.component';
                         data: { permission: 'Pages.Roles' },
                         canActivate: [AppRouteGuard],
                     },
+
+                    {
+                        path: 'brands',
+                        loadChildren: () => import('./brands/brands.module').then((m) => m.BrandsModule),
+                        data: { permission: 'Pages.Brands' },
+                        canActivate: [AppRouteGuard],
+                    },
+
+                    {
+                        path: 'categories',
+                        loadChildren: () => import('./categories/categories.module').then((m) => m.CategoriesModule),
+                        data: { permission: 'Pages.Categories' },
+                        canActivate: [AppRouteGuard],
+                    },
+
+                    {
+                        path: 'suppliers',
+                        loadChildren: () => import('./suppliers/suppliers.module').then((m) => m.SuppliersModule),
+                        data: { permission: 'Pages.Suppliers' },
+                        canActivate: [AppRouteGuard],
+                    },
+
                     {
                         path: 'tenants',
                         loadChildren: () => import('./tenants/tenants.module').then((m) => m.TenantsModule),
@@ -49,4 +71,4 @@ import { AppComponent } from './app.component';
     ],
     exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

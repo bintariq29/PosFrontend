@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { BrandsComponent } from './brands.component'
 import { BrandsRoutingModule } from './brands-routing.module';
 
 
@@ -8,7 +8,9 @@ import { BrandsRoutingModule } from './brands-routing.module';
   declarations: [],
   imports: [
     CommonModule,
-    BrandsRoutingModule
+    BrandsRoutingModule,
+    BrandsComponent,
+    
   ]
 })
 export class BrandsModule { }
