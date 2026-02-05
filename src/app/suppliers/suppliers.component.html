@@ -27,21 +27,23 @@
 
             <ng-template pTemplate="header">
                 <tr class="bg-dark text-white border-0">
+                    <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold"
+                        style="width: 50px">Id</th>
                     <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Name</th>
-                    <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Description</th>
+                    <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Status</th>
+                    <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Contact No</th>
+                    <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Email</th>
+                    <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Address</th>
                     <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Created At</th>
                     <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Updated At</th>
-                    <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Status</th>
                     <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Actions</th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-supplier>
                 <tr class="border-bottom border-light align-middle">
+                    <td class="py-3">{{ supplier.id }}</td>
                     <td class="py-3">{{ supplier.name }}</td>
-                    <td class="py-3 text-muted small">{{ supplier.description }}</td>
-                    <td class="py-3">{{ supplier.createdAt | date: 'short' }}</td>
-                    <td class="py-3">{{ supplier.updatedAt | date: 'short' }}</td>
                     <td class="py-3">
                         <div class="d-inline-flex align-items-center px-3 py-1 rounded-pill fw-bold" [ngStyle]="{
             'background-color': supplier.isActive ? '#e6f4ea' : '#fce8e6',
@@ -55,7 +57,11 @@
                             {{ supplier.isActive ? 'ACTIVE' : 'INACTIVE' }}
                         </div>
                     </td>
-
+                    <td class="py-3 text-muted small">{{ supplier.contactNo }}</td>
+                    <td class="py-3 text-muted small">{{ supplier.email }}</td>
+                    <td class="py-3 text-muted small">{{ supplier.address }}</td>
+                    <td class="py-3">{{ supplier.createAt | date: 'short' }}</td>
+                    <td class="py-3">{{ supplier.updateAt | date: 'short' }}</td>
 
                     <td class="py-3">
                         <button class="btn btn-sm btn-outline-success fw-bold me-2 px-3 mx-1"
@@ -68,7 +74,7 @@
 
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="5" class="text-center py-5 text-muted">
+                    <td colspan="9" class="text-center py-5 text-muted">
                         No suppliers found
                     </td>
                 </tr>
