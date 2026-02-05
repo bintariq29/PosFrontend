@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor, CommonModule } from '@angular/common';
 import { LocalizePipe } from '@shared/pipes/localize.pipe';
 import { ButtonModule } from 'primeng/button';
+import { CreateBrandDialogComponent } from './create-brand/create-brand-dialog.component';
 
 @Component({
   selector: 'app-brands',
@@ -70,6 +71,21 @@ export class BrandsComponent implements OnInit {
   }
 
   createBrand(): void {
+    const initialState = {
+      // Agar dialog ko koi data bhejna ho to yahan likhte hain
+    };
+
+    this._modalService.show(CreateBrandDialogComponent, {
+      initialState,
+      class: 'modal-lg', // Bootstrap class size control karne ke liye
+      backdrop: 'static', // Bahar click karne se band nahi hoga
+      keyboard: false
+    });
+
+    // Jab dialog close ho aur data refresh karna ho:
+    this._modalService.onHide.subscribe(() => {
+      this.loadBrands();
+    });
   }
 
   editBrand(brand: BrandDto): void {
