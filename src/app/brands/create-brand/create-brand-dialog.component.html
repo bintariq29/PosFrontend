@@ -11,15 +11,25 @@
             <label class="form-label fw-bold text-dark mb-2">Brand Name</label>
             <div class="input-group shadow-sm">
 
-                <input type="text" class="form-control border-start-0 ps-0 py-2" placeholder="e.g. Samsung, Nike..."
-                    style="outline: none; box-shadow: none;">
+                <input type="text" name="name" [(ngModel)]="brand.name" class="form-control border-start-0 ps-0 py-2"
+                    placeholder="e.g. Samsung, Nike..." required>
             </div>
         </div>
 
         <div class="mb-3">
             <label class="form-label fw-bold text-dark mb-2">Description</label>
-            <textarea class="form-control shadow-sm" rows="4" placeholder="Write a brief description about the brand..."
-                style="resize: none;"></textarea>
+            <textarea name="description" [(ngModel)]="brand.description" class="form-control shadow-sm" rows="4"
+                placeholder="Write a brief description..." style="resize: none;"></textarea>
+        </div>
+
+        <div class="mb-3 d-flex align-items-center">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" name="isActive" id="isActive"
+                    [(ngModel)]="brand.isActive">
+                <label class="form-check-label fw-bold text-dark ms-2" for="isActive">
+                    Is Active
+                </label>
+            </div>
         </div>
     </form>
 </div>

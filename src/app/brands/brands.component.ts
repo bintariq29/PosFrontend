@@ -72,17 +72,17 @@ export class BrandsComponent implements OnInit {
 
   createBrand(): void {
     const initialState = {
-      // Agar dialog ko koi data bhejna ho to yahan likhte hain
+
     };
 
     this._modalService.show(CreateBrandDialogComponent, {
       initialState,
-      class: 'modal-lg', // Bootstrap class size control karne ke liye
-      backdrop: 'static', // Bahar click karne se band nahi hoga
+      class: 'modal-lg',
+      backdrop: 'static',
       keyboard: false
     });
 
-    // Jab dialog close ho aur data refresh karna ho:
+
     this._modalService.onHide.subscribe(() => {
       this.loadBrands();
     });
