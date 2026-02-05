@@ -4,6 +4,7 @@ import { finalize } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SupplierDto, SupplierServiceProxy } from '../../../shared/service-proxies/service-proxies';
+import moment from 'moment-timezone';
 
 @Component({
   selector: 'app-edit-supplier-dialog',
@@ -30,6 +31,7 @@ export class EditSupplierDialogComponent implements OnInit {
 
   save(): void {
     this.saving = true;
+    this.supplier.updateAt = moment();
 
     this._supplierService
       .update(this.supplier)
