@@ -1,1 +1,44 @@
-<p>edit-supplier-dialog works!</p>
+<div class="bg-dark modal-header border-0 p-4">
+    <h4 class="modal-title text-white fw-bold">
+        <i class="pi pi-pencil me-2"></i>Edit Supplier: {{ supplier.name }}
+    </h4>
+    <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="bsModalRef.hide()"></button>
+</div>
+
+<div class="modal-body p-4 bg-light">
+    <form #editForm="ngForm">
+        <div class="mb-4">
+            <label class="form-label fw-bold text-dark mb-2">Supplier Name</label>
+            <div class="input-group shadow-sm">
+                <input type="text" name="name" [(ngModel)]="supplier.name"
+                    class="form-control border-start-0 ps-3 py-2 bg-secondary-subtle" [readonly]="true"
+                    style="outline: none; box-shadow: none; cursor: not-allowed;">
+            </div>
+            <small class="text-muted">Supplier name cannot be changed.</small>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold text-dark mb-2">Description</label>
+            <!-- <textarea name="description" [(ngModel)]="supplier.description" class="form-control shadow-sm" rows="4"
+                placeholder="Write a brief description..." style="resize: none;"></textarea> -->
+        </div>
+
+        <div class="mb-3 d-flex align-items-center">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" name="isActive" id="editIsActive"
+                    [(ngModel)]="supplier.isActive" style="cursor: pointer;">
+                <label class="form-check-label fw-bold text-dark ms-2" for="editIsActive" style="cursor: pointer;">
+                    Is Active
+                </label>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer border-0 bg-white p-3 shadow-lg">
+    <button class="btn btn-outline-danger fw-bold px-4 shadow-sm mx-2" (click)="close()">Cancel</button>
+    <button class="btn btn-outline-primary fw-bold px-4 shadow-sm mx-2" (click)="save()" [disabled]="saving">
+        <span *ngIf="saving" class="spinner-border spinner-border-sm me-1"></span>
+        Save Changes
+    </button>
+</div>
