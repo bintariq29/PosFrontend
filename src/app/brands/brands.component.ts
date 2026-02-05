@@ -49,12 +49,24 @@ export class BrandsComponent implements OnInit {
 
     this._brandService
       .getAll(this.keyword, skipCount, maxResultCount)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe((result: BrandDtoPagedResultDto) => {
-        this.brands = result.items || [];
-        this.totalRecords = result.totalCount || 0;
-        this.cd.detectChanges();
-      });
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cd.markForCheck();
+        })
+      )
+      .subscribe(
+        (result: BrandDtoPagedResultDto) => {
+          this.brands = result.items || [];
+          this.totalRecords = result.totalCount || 0;
+          this.cd.detectChanges();
+        },
+        (error: any) => {
+          console.error('Error loading brands:', error);
+          this.loading = false;
+          this.cd.markForCheck();
+        }
+      );
   }
 
   createBrand(): void {
