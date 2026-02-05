@@ -7,7 +7,7 @@ import { Paginator } from 'primeng/paginator';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { LazyLoadEvent } from 'primeng/api';
 import { finalize } from 'rxjs/operators';
-
+import { CreateCategoryDialogComponent } from './create-category/create-category-dialog.component'
 @Component({
   selector: 'app-categories',
   imports: [FormsModule, CommonModule, TableModule],
@@ -34,7 +34,7 @@ export class CategoriesComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  createCategory() { }
+
 
   onSearch() { }
 
@@ -74,36 +74,23 @@ export class CategoriesComponent implements OnInit {
       );
   }
 
-  createBrand(): void {
-    // const initialState = {
+  createCategory(): void {
+    const initialState = {
 
-    // };
+    };
 
-    // this.modalService.show(CreateBrandDialogComponent, {
-    //   initialState,
-    //   class: 'modal-lg',
-    //   backdrop: 'static',
-    //   keyboard: false
-    // });
+    this.modalService.show(CreateCategoryDialogComponent, {
+      initialState,
+      class: 'modal-lg',
+      backdrop: 'static',
+      keyboard: false
+    });
 
 
-    // this._modalService.onHide.subscribe(() => {
-    //   this.loadBrands();
-    // });
+    this.modalService.onHide.subscribe(() => {
+      this.loadCategories();
+    });
   }
-  //  editBrand(brand: BrandDto): void {
-  // const modal = this._modalService.show(EidtBrandDialogComponent, {
-  //   initialState: {
-  //     brand: brand.clone()
-  //   },
-  //   class: 'modal-lg',
-  //   backdrop: 'static',
-  //   keyboard: false
-  // });
-
-  // modal.content.onSave.subscribe(() => {
-  //   this.loadBrands();
-  // });
-  // }
+ 
 
 }
