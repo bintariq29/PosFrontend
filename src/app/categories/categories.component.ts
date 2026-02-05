@@ -40,7 +40,22 @@ export class CategoriesComponent implements OnInit {
   onSearch() { }
 
   clearFilters() { }
-  deleteCategory() { }
+
+  deleteCategory(category: CategoryDto): void {
+
+    abp.message.confirm(
+      `Are you sure you want to delete category "${category.name}"?`,
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this._categoryService.delete(category.id).subscribe(() => {
+            abp.notify.success('Successfully Deleted');
+            this.loadCategories();
+          });
+        }
+      }
+    );
+  }
 
   editCategory(category: CategoryDto): void {
     const modal = this.modalService.show(EditCategoryDialogComponent, {
