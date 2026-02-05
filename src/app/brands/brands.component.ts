@@ -12,6 +12,7 @@ import { NgIf, NgFor, CommonModule } from '@angular/common';
 import { LocalizePipe } from '@shared/pipes/localize.pipe';
 import { ButtonModule } from 'primeng/button';
 import { CreateBrandDialogComponent } from './create-brand/create-brand-dialog.component';
+import { EidtBrandDialogComponent } from './edit-brand/eidt-brand-dialog.component';
 
 @Component({
   selector: 'app-brands',
@@ -89,9 +90,34 @@ export class BrandsComponent implements OnInit {
   }
 
   editBrand(brand: BrandDto): void {
+    const modal = this._modalService.show(EidtBrandDialogComponent, {
+      initialState: {
+        brand: brand.clone()
+      },
+      class: 'modal-lg',
+      backdrop: 'static',
+      keyboard: false
+    });
+
+    modal.content.onSave.subscribe(() => {
+      this.loadBrands();
+    });
   }
 
   deleteBrand(brand: BrandDto): void {
+
+    abp.message.confirm(
+      `Are you sure you want to delete brand "${brand.name}"?`,
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this._brandService.delete(brand.id).subscribe(() => {
+            abp.notify.success('Successfully Deleted');
+            this.loadBrands();
+          });
+        }
+      }
+    );
   }
 
   clearFilters(): void {
