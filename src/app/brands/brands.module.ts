@@ -6,7 +6,6 @@ import { BrandServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
 
 @NgModule({
-  declarations: [],
   imports: [
     CommonModule,
     BrandsRoutingModule,

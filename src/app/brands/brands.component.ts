@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, ViewChild, OnInit } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
@@ -8,86 +8,74 @@ import { Table, TableModule } from 'primeng/table';
 import { LazyLoadEvent, PrimeTemplate } from 'primeng/api';
 import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { FormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
+import { NgIf, NgFor, CommonModule } from '@angular/common';
 import { LocalizePipe } from '@shared/pipes/localize.pipe';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-brands',
   templateUrl: './brands.component.html',
   animations: [appModuleAnimation()],
   standalone: true,
-  imports: [FormsModule, TableModule, PrimeTemplate, NgIf, PaginatorModule, LocalizePipe],
+  imports: [FormsModule, TableModule, PrimeTemplate, NgIf, NgFor, CommonModule, PaginatorModule, LocalizePipe, ButtonModule],
 })
-export class BrandsComponent extends PagedListingComponentBase<BrandDto> {
-  @ViewChild('dataTable', { static: true }) dataTable: Table;
-  @ViewChild('paginator', { static: true }) paginator: Paginator;
+export class BrandsComponent implements OnInit {
+  @ViewChild('dataTable', { static: false }) dataTable: Table;
+  @ViewChild('paginator', { static: false }) paginator: Paginator;
 
   brands: BrandDto[] = [];
   keyword = '';
+  totalRecords = 0;
+  loading = true;
+  rows = 10;
 
   constructor(
     injector: Injector,
     private _brandService: BrandServiceProxy,
     private _modalService: BsModalService,
-    cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef
   ) {
-    super(injector, cd);
+
   }
 
-  createBrand(): void {
-    // TODO: Implement create brand dialog
+  ngOnInit(): void {
+    this.loadBrands();
   }
 
-  editBrand(brand: BrandDto): void {
-    // TODO: Implement edit brand dialog
-  }
-
-  clearFilters(): void {
-    this.keyword = '';
-  }
-
-  list(event?: LazyLoadEvent): void {
-    if (this.primengTableHelper.shouldResetPaging(event)) {
-      this.paginator.changePage(0);
-
-      if (this.primengTableHelper.records && this.primengTableHelper.records.length > 0) {
-        return;
-      }
-    }
-
-    this.primengTableHelper.showLoadingIndicator();
+  loadBrands(event?: LazyLoadEvent): void {
+    this.loading = true;
+    const skipCount = event?.first || 0;
+    const maxResultCount = event?.rows || this.rows;
 
     this._brandService
-      .getAll(
-        this.primengTableHelper.getSorting(this.dataTable),
-        this.primengTableHelper.getSkipCount(this.paginator, event),
-        this.primengTableHelper.getMaxResultCount(this.paginator, event)
-      )
-      .pipe(
-        finalize(() => {
-          this.primengTableHelper.hideLoadingIndicator();
-        })
-      )
+      .getAll(this.keyword, skipCount, maxResultCount)
+      .pipe(finalize(() => this.loading = false))
       .subscribe((result: BrandDtoPagedResultDto) => {
-        this.primengTableHelper.records = result.items;
-        this.primengTableHelper.totalRecordsCount = result.totalCount;
-        this.primengTableHelper.hideLoadingIndicator();
+        this.brands = result.items || [];
+        this.totalRecords = result.totalCount || 0;
         this.cd.detectChanges();
       });
   }
 
-  delete(brand: BrandDto): void {
-    abp.message.confirm(
-      this.l('AreYouSure'),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._brandService.delete(brand.id).subscribe(() => {
-            abp.notify.success(this.l('SuccessfullyDeleted'));
-            this.refresh();
-          });
-        }
-      }
-    );
+  createBrand(): void {
   }
+
+  editBrand(brand: BrandDto): void {
+  }
+
+  deleteBrand(brand: BrandDto): void {
+  }
+
+  clearFilters(): void {
+    this.keyword = '';
+    this.loadBrands();
+  }
+
+  onSearch(): void {
+    this.loadBrands();
+  }
+
+
+
+ 
 }
