@@ -2,33 +2,34 @@
     style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
     <div class="col-md-6">
         <h4 class="text-dark fw-bolder  mb-2" style="letter-spacing: -1px;">
-            <i class="pi pi-briefcase me-2 text-primary"></i>Brand Management
+            <i class="pi pi-briefcase me-2 text-primary"></i>Category Management
         </h4>
     </div>
     <div class="row g-3 mb-4 align-items-center">
-
         <div class="col-auto">
+
             <input type="text" class="form-control shadow-sm border-2 border-dark" style="width: 320px;"
-                [(ngModel)]="keyword" placeholder="Search brands..." />
+                [(ngModel)]="keyword" placeholder="Search categories..." />
         </div>
         <div class="col-auto d-flex gap-3">
             <button class="btn btn-outline-dark fw-bold px-4 shadow-sm mx-2" (click)="onSearch()">Search</button>
             <button class="btn btn-outline-dark fw-bold px-4 shadow-sm mx-2" (click)="clearFilters()">Clear</button>
-            <button class="btn btn-outline-primary fw-bold px-4 shadow-sm mx-2" (click)="createBrand()">Create
+            <button class="btn btn-outline-primary fw-bold px-4 shadow-sm mx-2" (click)="createCategory()">Create
             </button>
         </div>
     </div>
 
     <div class="bg-white rounded-3 overflow-hidden shadow">
-        <p-table #dataTable [value]="brands" [rows]="rows" [totalRecords]="totalRecords" [paginator]="true"
-            [lazy]="true" [loading]="loading" (onLazyLoad)="loadBrands($event)" [showCurrentPageReport]="true"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} brands"
+        <p-table #dataTable [value]="categories" [rows]="rows" [totalRecords]="totalRecords" [paginator]="true"
+            [lazy]="true" [loading]="loading" (onLazyLoad)="loadCategories($event)" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} categories"
             styleClass="p-datatable-striped">
 
             <ng-template pTemplate="header">
                 <tr class="bg-dark text-white border-0">
-                    <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Name</th>
+                    <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Category Name</th>
                     <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Description</th>
+
                     <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Created At</th>
                     <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Updated At</th>
                     <th class="bg-transparent text-white border-0 py-3 small text-uppercase fw-bold">Status</th>
@@ -36,40 +37,30 @@
                 </tr>
             </ng-template>
 
-            <ng-template pTemplate="body" let-brand>
+            <ng-template pTemplate="body" let-category>
                 <tr class="border-bottom border-light align-middle">
-                    <td class="py-3">{{ brand.name }}</td>
-                    <td class="py-3 text-muted small">{{ brand.description }}</td>
-                    <td class="py-3">{{ brand.createdAt | date: 'short' }}</td>
-                    <td class="py-3">{{ brand.updatedAt | date: 'short' }}</td>
+                    <td class="py-3 fw-bold text-dark">{{ category.name }}</td>
+                    <td class="py-3 text-muted small">{{ category.description }}</td>
+                    <td class="py-3">{{ category.createdAt | date: 'short' }}</td>
+                    <td class="py-3">{{ category.updatedAt | date: 'short' }}</td>
                     <td class="py-3">
                         <div class="d-inline-flex align-items-center px-3 py-1 rounded-pill fw-bold" [ngStyle]="{
-            'background-color': brand.isActive ? '#e6f4ea' : '#fce8e6',
-            'color': brand.isActive ? '#1e7e34' : '#d93025',
+            'background-color': category.isActive ? '#e6f4ea' : '#fce8e6',
+            'color': category.isActive ? '#1e7e34' : '#d93025',
             'font-size': '0.75rem',
             'letter-spacing': '0.5px'
          }">
-                            <span class="me-2" [style.background-color]="brand.isActive ? '#1e7e34' : '#d93025'"
+                            <span class="me-2" [style.background-color]="category.isActive ? '#1e7e34' : '#d93025'"
                                 style="width: 8px; height: 8px; border-radius: 50%; display: inline-block;">
                             </span>
-                            {{ brand.isActive ? 'ACTIVE' : 'INACTIVE' }}
+                            {{ category.isActive ? 'ACTIVE' : 'INACTIVE' }}
                         </div>
                     </td>
-
-
                     <td class="py-3">
                         <button class="btn btn-sm btn-outline-success fw-bold me-2 px-3 mx-1"
-                            (click)="editBrand(brand)">Edit</button>
+                            (click)="editCategory(category)">Edit</button>
                         <button class="btn btn-sm btn-outline-danger fw-bold px-3 mx-1"
-                            (click)="deleteBrand(brand)">Delete</button>
-                    </td>
-                </tr>
-            </ng-template>
-
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="5" class="text-center py-5 text-muted">
-                        No brands found
+                            (click)="deleteCategory(category)">Delete</button>
                     </td>
                 </tr>
             </ng-template>

@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, Injector, ViewChild, OnInit } from '@angu
 import { finalize } from 'rxjs/operators';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { PagedListingComponentBase } from 'shared/paged-listing-component-base';
 import { BrandServiceProxy, BrandDto, BrandDtoPagedResultDto } from '@shared/service-proxies/service-proxies';
 import { Table, TableModule } from 'primeng/table';
 import { LazyLoadEvent, PrimeTemplate } from 'primeng/api';
