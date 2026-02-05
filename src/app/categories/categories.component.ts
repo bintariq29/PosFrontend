@@ -8,6 +8,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { LazyLoadEvent } from 'primeng/api';
 import { finalize } from 'rxjs/operators';
 import { CreateCategoryDialogComponent } from './create-category/create-category-dialog.component'
+import { EditCategoryDialogComponent } from './edit-category/edit-category-dialog.component';
 @Component({
   selector: 'app-categories',
   imports: [FormsModule, CommonModule, TableModule],
@@ -41,8 +42,19 @@ export class CategoriesComponent implements OnInit {
   clearFilters() { }
   deleteCategory() { }
 
-  editCategory() {
+  editCategory(category: CategoryDto): void {
+    const modal = this.modalService.show(EditCategoryDialogComponent, {
+      initialState: {
+        category: category.clone()
+      },
+      class: 'modal-lg',
+      backdrop: 'static',
+      keyboard: false
+    });
 
+    modal.content.onSave.subscribe(() => {
+      this.loadCategories();
+    });
   }
 
 
@@ -91,6 +103,6 @@ export class CategoriesComponent implements OnInit {
       this.loadCategories();
     });
   }
- 
+
 
 }
