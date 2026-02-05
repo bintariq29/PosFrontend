@@ -77,5 +77,5 @@ export class BrandsComponent implements OnInit {
 
 
 
- 
+
 }
