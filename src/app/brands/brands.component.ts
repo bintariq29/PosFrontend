@@ -18,7 +18,7 @@ import { EidtBrandDialogComponent } from './edit-brand/eidt-brand-dialog.compone
   templateUrl: './brands.component.html',
   animations: [appModuleAnimation()],
   standalone: true,
-  imports: [FormsModule, TableModule, PrimeTemplate, NgIf, NgFor, CommonModule, PaginatorModule, LocalizePipe, ButtonModule],
+  imports: [FormsModule, TableModule, PrimeTemplate, CommonModule, PaginatorModule, ButtonModule],
 })
 export class BrandsComponent implements OnInit {
   @ViewChild('dataTable', { static: false }) dataTable: Table;

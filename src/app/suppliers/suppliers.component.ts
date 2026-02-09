@@ -18,7 +18,7 @@ import { appModuleAnimation } from '../../shared/animations/routerTransition';
   templateUrl: './suppliers.component.html',
   animations: [appModuleAnimation()],
   standalone: true,
-  imports: [FormsModule, TableModule, PrimeTemplate, NgIf, NgFor, CommonModule, PaginatorModule, LocalizePipe, ButtonModule],
+  imports: [FormsModule, TableModule, PrimeTemplate, CommonModule, PaginatorModule, ButtonModule],
   providers: [SupplierServiceProxy]
 })
 export class SuppliersComponent implements OnInit {

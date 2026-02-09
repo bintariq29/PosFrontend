@@ -1,7 +1,7 @@
-<form class="form-horizontal" autocomplete="off" #createProductForm="ngForm" (ngSubmit)="save()">
+<form class="form-horizontal" autocomplete="off" #editProductForm="ngForm" (ngSubmit)="save()">
     <div class="modal-header">
         <h4 class="modal-title">
-            <span>Create New Product</span>
+            <span>Edit Product</span>
         </h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="bsModalRef.hide()"></button>
     </div>
@@ -22,14 +22,12 @@
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Brand *</label>
                 <select class="form-select" name="brandId" [(ngModel)]="product.brandId" required>
-                    <option [ngValue]="undefined" disabled>Select Brand</option>
                     <option *ngFor="let brand of brands" [ngValue]="brand.id">{{brand.name}}</option>
                 </select>
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Category *</label>
                 <select class="form-select" name="categoryId" [(ngModel)]="product.categoryId" required>
-                    <option [ngValue]="undefined" disabled>Select Category</option>
                     <option *ngFor="let category of categories" [ngValue]="category.id">{{category.name}}</option>
                 </select>
             </div>
@@ -42,15 +40,19 @@
 
         <div class="mb-3">
             <label class="form-label fw-bold">Product Image</label>
+            <div *ngIf="product.image" class="mb-2">
+                <img [src]="'data:image/png;base64,' + product.image" alt="Product Image" style="max-height: 100px;"
+                    class="img-thumbnail">
+            </div>
             <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*">
-            <small class="text-muted">Upload product image (JPG/PNG)</small>
+            <small class="text-muted">Upload new image to replace existing.</small>
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-3">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="isActive" id="isActive"
-                        [(ngModel)]="product.isActive" checked>
+                        [(ngModel)]="product.isActive">
                     <label class="form-check-label" for="isActive">
                         Is Active
                     </label>
@@ -70,6 +72,6 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Cancel</button>
-        <button type="submit" class="btn btn-primary" [disabled]="!createProductForm.form.valid || saving">Save</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!editProductForm.form.valid || saving">Save</button>
     </div>
 </form>
