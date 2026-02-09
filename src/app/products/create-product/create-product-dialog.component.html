@@ -62,7 +62,7 @@
 
         <div class="mb-4">
             <label class="form-label fw-bold text-dark mb-2">Product Image</label>
-            <div *ngIf="product.image" class="mb-3">
+            <div *ngIf="imageDto.imageData" class="mb-3">
                 <img [src]="'data:image/png;base64,' + product.image" alt="Product Image" style="max-height: 120px;"
                     class="img-thumbnail rounded">
             </div>

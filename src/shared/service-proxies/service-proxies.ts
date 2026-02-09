@@ -1292,7 +1292,7 @@ export class ImageServiceProxy {
      * @param body (optional) 
      * @return OK
      */
-    update(body: UpdateImageDto | undefined): Observable<ImageDto> {
+    update(body: ImageDto | undefined): Observable<ImageDto> {
         let url_ = this.baseUrl + "/api/services/app/Image/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -4330,8 +4330,7 @@ export interface ICreateCategoryDto {
 
 export class CreateImageDto implements ICreateImageDto {
     productId: number;
-    imageData: string | undefined;
-    createdAt: moment.Moment;
+    imageData: string;
 
     constructor(data?: ICreateImageDto) {
         if (data) {
@@ -4346,7 +4345,6 @@ export class CreateImageDto implements ICreateImageDto {
         if (_data) {
             this.productId = _data["productId"];
             this.imageData = _data["imageData"];
-            this.createdAt = _data["createdAt"] ? moment(_data["createdAt"].toString()) : <any>undefined;
         }
     }
 
@@ -4361,7 +4359,6 @@ export class CreateImageDto implements ICreateImageDto {
         data = typeof data === 'object' ? data : {};
         data["productId"] = this.productId;
         data["imageData"] = this.imageData;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         return data;
     }
 
@@ -4375,8 +4372,7 @@ export class CreateImageDto implements ICreateImageDto {
 
 export interface ICreateImageDto {
     productId: number;
-    imageData: string | undefined;
-    createdAt: moment.Moment;
+    imageData: string;
 }
 
 export class CreateProductDto implements ICreateProductDto {
@@ -4389,7 +4385,6 @@ export class CreateProductDto implements ICreateProductDto {
     isActive: boolean;
     isPerishable: boolean;
     createdAt: moment.Moment;
-    image: string | undefined;
 
     constructor(data?: ICreateProductDto) {
         if (data) {
@@ -4411,7 +4406,6 @@ export class CreateProductDto implements ICreateProductDto {
             this.isActive = _data["isActive"];
             this.isPerishable = _data["isPerishable"];
             this.createdAt = _data["createdAt"] ? moment(_data["createdAt"].toString()) : <any>undefined;
-            this.image = _data["image"];
         }
     }
 
@@ -4433,7 +4427,6 @@ export class CreateProductDto implements ICreateProductDto {
         data["isActive"] = this.isActive;
         data["isPerishable"] = this.isPerishable;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
-        data["image"] = this.image;
         return data;
     }
 
@@ -4455,7 +4448,6 @@ export interface ICreateProductDto {
     isActive: boolean;
     isPerishable: boolean;
     createdAt: moment.Moment;
-    image: string | undefined;
 }
 
 export class CreateRoleDto implements ICreateRoleDto {
@@ -4891,8 +4883,6 @@ export class ImageDto implements IImageDto {
     id: number;
     productId: number;
     imageData: string | undefined;
-    createdAt: moment.Moment;
-    updatedAt: moment.Moment;
 
     constructor(data?: IImageDto) {
         if (data) {
@@ -4908,8 +4898,6 @@ export class ImageDto implements IImageDto {
             this.id = _data["id"];
             this.productId = _data["productId"];
             this.imageData = _data["imageData"];
-            this.createdAt = _data["createdAt"] ? moment(_data["createdAt"].toString()) : <any>undefined;
-            this.updatedAt = _data["updatedAt"] ? moment(_data["updatedAt"].toString()) : <any>undefined;
         }
     }
 
@@ -4925,8 +4913,6 @@ export class ImageDto implements IImageDto {
         data["id"] = this.id;
         data["productId"] = this.productId;
         data["imageData"] = this.imageData;
-        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
-        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
         return data;
     }
 
@@ -4942,8 +4928,6 @@ export interface IImageDto {
     id: number;
     productId: number;
     imageData: string | undefined;
-    createdAt: moment.Moment;
-    updatedAt: moment.Moment;
 }
 
 export class ImageDtoPagedResultDto implements IImageDtoPagedResultDto {
@@ -5252,7 +5236,6 @@ export class ProductDto implements IProductDto {
     isPerishable: boolean;
     createdAt: moment.Moment;
     updatedAt: moment.Moment;
-    image: string | undefined;
 
     constructor(data?: IProductDto) {
         if (data) {
@@ -5276,7 +5259,6 @@ export class ProductDto implements IProductDto {
             this.isPerishable = _data["isPerishable"];
             this.createdAt = _data["createdAt"] ? moment(_data["createdAt"].toString()) : <any>undefined;
             this.updatedAt = _data["updatedAt"] ? moment(_data["updatedAt"].toString()) : <any>undefined;
-            this.image = _data["image"];
         }
     }
 
@@ -5300,7 +5282,6 @@ export class ProductDto implements IProductDto {
         data["isPerishable"] = this.isPerishable;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-        data["image"] = this.image;
         return data;
     }
 
@@ -5324,7 +5305,6 @@ export interface IProductDto {
     isPerishable: boolean;
     createdAt: moment.Moment;
     updatedAt: moment.Moment;
-    image: string | undefined;
 }
 
 export class ProductDtoPagedResultDto implements IProductDtoPagedResultDto {
@@ -6347,61 +6327,6 @@ export interface IUpdateCategoryDto {
     updatedAt: moment.Moment;
 }
 
-export class UpdateImageDto implements IUpdateImageDto {
-    id: number;
-    productId: number;
-    imageData: string | undefined;
-    updatedAt: moment.Moment;
-
-    constructor(data?: IUpdateImageDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.productId = _data["productId"];
-            this.imageData = _data["imageData"];
-            this.updatedAt = _data["updatedAt"] ? moment(_data["updatedAt"].toString()) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): UpdateImageDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateImageDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["productId"] = this.productId;
-        data["imageData"] = this.imageData;
-        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-        return data;
-    }
-
-    clone(): UpdateImageDto {
-        const json = this.toJSON();
-        let result = new UpdateImageDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IUpdateImageDto {
-    id: number;
-    productId: number;
-    imageData: string | undefined;
-    updatedAt: moment.Moment;
-}
-
 export class UpdateProductDto implements IUpdateProductDto {
     id: number;
     categoryId: number;
@@ -6412,7 +6337,6 @@ export class UpdateProductDto implements IUpdateProductDto {
     isActive: boolean;
     isPerishable: boolean;
     updatedAt: moment.Moment;
-    image: string | undefined;
 
     constructor(data?: IUpdateProductDto) {
         if (data) {
@@ -6434,7 +6358,6 @@ export class UpdateProductDto implements IUpdateProductDto {
             this.isActive = _data["isActive"];
             this.isPerishable = _data["isPerishable"];
             this.updatedAt = _data["updatedAt"] ? moment(_data["updatedAt"].toString()) : <any>undefined;
-            this.image = _data["image"];
         }
     }
 
@@ -6456,7 +6379,6 @@ export class UpdateProductDto implements IUpdateProductDto {
         data["isActive"] = this.isActive;
         data["isPerishable"] = this.isPerishable;
         data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-        data["image"] = this.image;
         return data;
     }
 
@@ -6478,7 +6400,6 @@ export interface IUpdateProductDto {
     isActive: boolean;
     isPerishable: boolean;
     updatedAt: moment.Moment;
-    image: string | undefined;
 }
 
 export class UpdateSupplierDto implements IUpdateSupplierDto {

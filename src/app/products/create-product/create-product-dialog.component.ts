@@ -2,10 +2,11 @@ import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output } 
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 import { finalize } from 'rxjs/operators';
-import { BrandDto, BrandDtoPagedResultDto, BrandServiceProxy, CategoryDto, CategoryDtoPagedResultDto, CategoryServiceProxy, CreateProductDto, ImageServiceProxy, ProductServiceProxy } from '../../../shared/service-proxies/service-proxies';
+import { BrandDto, BrandDtoPagedResultDto, BrandServiceProxy, CategoryDto, CategoryDtoPagedResultDto, CategoryServiceProxy, CreateImageDto, CreateProductDto, ImageServiceProxy, ProductServiceProxy } from '../../../shared/service-proxies/service-proxies';
 import { AppComponentBase } from '../../../shared/app-component-base';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NotifyService } from '@node_modules/abp-ng2-module';
 
 @Component({
   selector: 'app-create-product-dialog',
@@ -17,6 +18,7 @@ import { CommonModule } from '@angular/common';
 export class CreateProductDialogComponent extends AppComponentBase implements OnInit {
   saving = false;
   product: CreateProductDto = new CreateProductDto();
+  imageDto: CreateImageDto = new CreateImageDto();
   brands: BrandDto[] = [];
   categories: CategoryDto[] = [];
 
@@ -30,6 +32,7 @@ export class CreateProductDialogComponent extends AppComponentBase implements On
     private _categoryService: CategoryServiceProxy,
     private _imageServiceProxy: ImageServiceProxy,
     private _cd: ChangeDetectorRef,
+    public notify: NotifyService
   ) {
     super(injector);
   }
@@ -67,26 +70,53 @@ export class CreateProductDialogComponent extends AppComponentBase implements On
         if (base64String.indexOf(',') > 0) {
           base64String = base64String.split(',')[1];
         }
-        this.product.image = base64String;
+        this.imageDto.imageData = base64String;
       };
       reader.readAsDataURL(file);
     }
   }
 
+  finishSave() {
+    this.notify.info(this.l('SavedSuccessfully'));
+    this.bsModalRef.hide();
+    this.onSave.emit();
+  }
   save(): void {
     this.saving = true;
 
+    // 1️⃣ Create the product first
     this._productService
       .create(this.product)
-      .pipe(
-        finalize(() => {
-          this.saving = false;
-        })
-      )
-      .subscribe(() => {
-        this.notify.info(this.l('SavedSuccessfully'));
-        this.bsModalRef.hide();
-        this.onSave.emit();
+      .pipe(finalize(() => (this.saving = false)))
+      .subscribe({
+        next: (createdProduct) => {
+          console.log("Product created:", createdProduct);
+
+          if (this.imageDto && this.imageDto.imageData) {
+            this.imageDto.productId = createdProduct.id;
+            
+            console.log("Saving image for Product ID:", this.imageDto.productId);
+
+            this._imageServiceProxy.create(this.imageDto).subscribe({
+              next: () => {
+                console.log("Image saved successfully");
+                this.finishSave();
+              },
+              error: (err) => {
+                console.error("Failed to save image", err);
+                this.finishSave();
+              }
+            });
+
+          } else {
+
+            this.finishSave();
+          }
+        },
+        error: (err) => {
+          console.error("Failed to create product", err);
+          this.finishSave();
+        }
       });
   }
 }

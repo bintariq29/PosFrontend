@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DataViewModule } from 'primeng/dataview';
 import { Console } from 'console';
+import { result } from '@node_modules/@types/lodash';
 
 @Component({
   selector: 'app-products',
@@ -37,87 +38,40 @@ export class ProductsComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDataPage({ first: 0, rows: 10 });
+    this.getAllProducts();
   }
-
-  getDataPage(event?: LazyLoadEvent): void {
-    this.loading = true;
-    const skipCount = event?.first || 0;
-    const maxResultCount = event?.rows || 10;
-
-    this._productService
-      .getAll(
-        this.keyword,
-        skipCount,
-        maxResultCount
-      )
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-          this.cd.markForCheck();
-        })
-      )
-      .subscribe((result: ProductDtoPagedResultDto) => {
-        this.products = result.items;
-        this.totalItems = result.totalCount;
+  getAllProducts(event?: LazyLoadEvent): void {
+    this._productService.getAll(
+      this.keyword,
+      0,
+      10
+    ).pipe(
+      finalize(() => {
+        this.loading = false;
         this.cd.markForCheck();
-        this.cd.detectChanges();
-      });
-    console.log(`PRODUCTS`, this.products);
+      })
+    ).subscribe((result: ProductDtoPagedResultDto) => {
+      this.products = result.items;
+      this.totalItems = result.totalCount;
+    });
+
   }
+
+
 
   refresh(): void {
-    this.getDataPage({ first: 0, rows: 10 });
+    this.getAllProducts();
   }
 
-  delete(product: ProductDto): void {
-    abp.message.confirm(
-      this.l('ProductDeleteWarningMessage', product.sku),
-      undefined,
-      (result: boolean) => {
-        if (result) {
-          this._productService.delete(product.id).subscribe(() => {
-            abp.notify.success(this.l('SuccessfullyDeleted'));
-            this.refresh();
-          });
-        }
-      }
-    );
-  }
+
 
   createProduct(): void {
-    this.showCreateOrEditProductDialog();
   }
 
   editProduct(product: ProductDto): void {
-    this.showCreateOrEditProductDialog(product.id);
   }
 
-  private showCreateOrEditProductDialog(id?: number): void {
-    let createOrEditProductDialog: BsModalRef;
-    if (!id) {
-      createOrEditProductDialog = this._modalService.show(
-        CreateProductDialogComponent,
-        {
-          class: 'modal-lg',
-        }
-      );
-    } else {
-      createOrEditProductDialog = this._modalService.show(
-        EditProductDialogComponent,
-        {
-          class: 'modal-lg',
-          initialState: {
-            id: id,
-          },
-        }
-      );
-    }
 
-    createOrEditProductDialog.content.onSave.subscribe(() => {
-      this.refresh();
-    });
-  }
 
   onSearch(): void {
     this.refresh();

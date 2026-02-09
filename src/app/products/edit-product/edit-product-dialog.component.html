@@ -8,13 +8,13 @@
 <form class="form-horizontal" autocomplete="off" #editProductForm="ngForm" (ngSubmit)="save()">
     <div class="modal-body p-4 bg-light">
         <div class="row">
-            <div class="col-md-6 mb-4">
+            <!-- <div class="col-md-6 mb-4">
                 <label class="form-label fw-bold text-dark mb-2">Product Name *</label>
                 <div class="input-group shadow-sm">
-                    <!-- <input type="text" class="form-control border-start-0 ps-0 py-2" name="name"
-                        [(ngModel)]="product.name" required maxlength="128" placeholder="e.g. Samsung Galaxy S21"> -->
+                    <input type="text" class="form-control border-start-0 ps-0 py-2" name="name"
+                        [(ngModel)]="product.name" required maxlength="128" placeholder="e.g. Samsung Galaxy S21">
                 </div>
-            </div>
+            </div> -->
             <div class="col-md-6 mb-4">
                 <label class="form-label fw-bold text-dark mb-2">SKU *</label>
                 <div class="input-group shadow-sm">
@@ -35,6 +35,7 @@
             <div class="col-md-6 mb-4">
                 <label class="form-label fw-bold text-dark mb-2">Brand *</label>
                 <select class="form-select shadow-sm" name="brandId" [(ngModel)]="product.brandId" required>
+                    <option [ngValue]="undefined" disabled>Select Brand</option>
                     <option *ngFor="let brand of brands" [ngValue]="brand.id">{{brand.name}}</option>
                 </select>
             </div>
@@ -44,21 +45,7 @@
             <div class="col-md-6 mb-4">
                 <label class="form-label fw-bold text-dark mb-2">Category *</label>
                 <select class="form-select shadow-sm" name="categoryId" [(ngModel)]="product.categoryId" required>
-                    <option *ngFor="let category of categories" [ngValue]="category.id">{{category.name}}</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <label class="form-label fw-bold text-dark mb-2">Brand *</label>
-                <select class="form-select shadow-sm" name="brandId" [(ngModel)]="product.brandId" required>
-                    <option *ngFor="let brand of brands" [ngValue]="brand.id">{{brand.name}}</option>
-                </select>
-            </div>
-            <div class="col-md-6 mb-4">
-                <label class="form-label fw-bold text-dark mb-2">Category *</label>
-                <select class="form-select shadow-sm" name="categoryId" [(ngModel)]="product.categoryId" required>
+                    <option [ngValue]="undefined" disabled>Select Category</option>
                     <option *ngFor="let category of categories" [ngValue]="category.id">{{category.name}}</option>
                 </select>
             </div>
@@ -72,7 +59,7 @@
 
         <div class="mb-4">
             <label class="form-label fw-bold text-dark mb-2">Product Image</label>
-            <div *ngIf="product.image" class="mb-3">
+            <div *ngIf="imageDto.imageData" class="mb-3">
                 <img [src]="'data:image/png;base64,' + product.image" alt="Product Image" style="max-height: 120px;"
                     class="img-thumbnail rounded">
             </div>
