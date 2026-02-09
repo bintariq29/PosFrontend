@@ -16,9 +16,9 @@ import { DataViewModule } from 'primeng/dataview';
   selector: 'app-products',
   templateUrl: './products.component.html',
   animations: [appModuleAnimation()],
-  standalone:true,
-  imports:[FormsModule,CommonModule,DataViewModule],
-  providers:[ProductServiceProxy,BrandServiceProxy,CategoryServiceProxy]
+  standalone: true,
+  imports: [FormsModule, CommonModule, DataViewModule],
+  providers: [ProductServiceProxy, BrandServiceProxy, CategoryServiceProxy]
 })
 export class ProductsComponent extends AppComponentBase implements OnInit {
   products: ProductDto[] = [];
@@ -36,7 +36,7 @@ export class ProductsComponent extends AppComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initial load will be triggered by p-dataView lazy load or explicitly
+    this.getDataPage({ first: 0, rows: 10 });
   }
 
   getDataPage(event?: LazyLoadEvent): void {

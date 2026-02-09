@@ -1,77 +1,111 @@
-<form class="form-horizontal" autocomplete="off" #editProductForm="ngForm" (ngSubmit)="save()">
-    <div class="modal-header">
-        <h4 class="modal-title">
-            <span>Edit Product</span>
-        </h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="bsModalRef.hide()"></button>
-    </div>
-    <div class="modal-body">
+<div class="bg-dark modal-header border-0 p-4">
+    <h4 class="modal-title text-white fw-bold">
+        <i class="pi pi-pencil me-2"></i>Edit Product
+    </h4>
+    <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="bsModalRef.hide()"></button>
+</div>
 
+<form class="form-horizontal" autocomplete="off" #editProductForm="ngForm" (ngSubmit)="save()">
+    <div class="modal-body p-4 bg-light">
         <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">SKU *</label>
-                <input type="text" class="form-control" name="sku" [(ngModel)]="product.sku" required maxlength="64">
+            <div class="col-md-6 mb-4">
+                <label class="form-label fw-bold text-dark mb-2">Product Name *</label>
+                <div class="input-group shadow-sm">
+                    <input type="text" class="form-control border-start-0 ps-0 py-2" name="name"
+                        [(ngModel)]="product.name" required maxlength="128" placeholder="e.g. Samsung Galaxy S21">
+                </div>
             </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Price *</label>
-                <input type="number" class="form-control" name="price" [(ngModel)]="product.price" required min="0">
+            <div class="col-md-6 mb-4">
+                <label class="form-label fw-bold text-dark mb-2">SKU *</label>
+                <div class="input-group shadow-sm">
+                    <input type="text" class="form-control border-start-0 ps-0 py-2" name="sku"
+                        [(ngModel)]="product.sku" required maxlength="64" placeholder="e.g. PROD-001">
+                </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Brand *</label>
-                <select class="form-select" name="brandId" [(ngModel)]="product.brandId" required>
+            <div class="col-md-6 mb-4">
+                <label class="form-label fw-bold text-dark mb-2">Price *</label>
+                <div class="input-group shadow-sm">
+                    <input type="number" class="form-control border-start-0 ps-0 py-2" name="price"
+                        [(ngModel)]="product.price" required min="0" placeholder="0.00">
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <label class="form-label fw-bold text-dark mb-2">Brand *</label>
+                <select class="form-select shadow-sm" name="brandId" [(ngModel)]="product.brandId" required>
                     <option *ngFor="let brand of brands" [ngValue]="brand.id">{{brand.name}}</option>
                 </select>
             </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Category *</label>
-                <select class="form-select" name="categoryId" [(ngModel)]="product.categoryId" required>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <label class="form-label fw-bold text-dark mb-2">Category *</label>
+                <select class="form-select shadow-sm" name="categoryId" [(ngModel)]="product.categoryId" required>
                     <option *ngFor="let category of categories" [ngValue]="category.id">{{category.name}}</option>
                 </select>
             </div>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label fw-bold">Description</label>
-            <textarea class="form-control" name="description" [(ngModel)]="product.description" rows="3"></textarea>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <label class="form-label fw-bold text-dark mb-2">Brand *</label>
+                <select class="form-select shadow-sm" name="brandId" [(ngModel)]="product.brandId" required>
+                    <option *ngFor="let brand of brands" [ngValue]="brand.id">{{brand.name}}</option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-4">
+                <label class="form-label fw-bold text-dark mb-2">Category *</label>
+                <select class="form-select shadow-sm" name="categoryId" [(ngModel)]="product.categoryId" required>
+                    <option *ngFor="let category of categories" [ngValue]="category.id">{{category.name}}</option>
+                </select>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label fw-bold">Product Image</label>
-            <div *ngIf="product.image" class="mb-2">
-                <img [src]="'data:image/png;base64,' + product.image" alt="Product Image" style="max-height: 100px;"
-                    class="img-thumbnail">
+        <div class="mb-4">
+            <label class="form-label fw-bold text-dark mb-2">Description</label>
+            <textarea class="form-control shadow-sm" name="description" [(ngModel)]="product.description" rows="3"
+                placeholder="Write a brief description..."></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label fw-bold text-dark mb-2">Product Image</label>
+            <div *ngIf="product.image" class="mb-3">
+                <img [src]="'data:image/png;base64,' + product.image" alt="Product Image" style="max-height: 120px;"
+                    class="img-thumbnail rounded">
             </div>
-            <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*">
-            <small class="text-muted">Upload new image to replace existing.</small>
+            <input type="file" class="form-control shadow-sm" (change)="onFileSelected($event)" accept="image/*">
+            <small class="text-muted">Upload new image to replace existing - Max 5MB</small>
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <div class="form-check">
+                <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" name="isActive" id="isActive"
                         [(ngModel)]="product.isActive">
-                    <label class="form-check-label" for="isActive">
+                    <label class="form-check-label fw-bold text-dark ms-2" for="isActive">
                         Is Active
                     </label>
                 </div>
             </div>
             <div class="col-md-6 mb-3">
-                <div class="form-check">
+                <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" name="isPerishable" id="isPerishable"
                         [(ngModel)]="product.isPerishable">
-                    <label class="form-check-label" for="isPerishable">
+                    <label class="form-check-label fw-bold text-dark ms-2" for="isPerishable">
                         Is Perishable
                     </label>
                 </div>
             </div>
         </div>
-
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Cancel</button>
-        <button type="submit" class="btn btn-primary" [disabled]="!editProductForm.form.valid || saving">Save</button>
+
+    <div class="modal-footer border-0 bg-white p-3 shadow-lg">
+        <button type="button" class="btn btn-outline-danger fw-bold px-4 shadow-sm mx-2"
+            (click)="bsModalRef.hide()">Cancel</button>
+        <button type="submit" class="btn btn-outline-primary fw-bold px-4 shadow-sm mx-2"
+            [disabled]="!editProductForm.form.valid || saving">Save</button>
     </div>
 </form>
