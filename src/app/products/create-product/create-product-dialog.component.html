@@ -32,24 +32,10 @@
                         [(ngModel)]="product.price" required min="0" placeholder="0.00">
                 </div>
             </div>
-            <div class="col-md-6 mb-4">
-                <label class="form-label fw-bold text-dark mb-2">Brand *</label>
-                <select class="form-select shadow-sm" name="brandId" [(ngModel)]="product.brandId" required>
-                    <option [ngValue]="undefined" disabled selected>Select Brand</option>
-                    <option *ngFor="let brand of brands" [ngValue]="brand.id">{{brand.name}}</option>
-                </select>
-            </div>
+
         </div>
 
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <label class="form-label fw-bold text-dark mb-2">Category *</label>
-                <select class="form-select shadow-sm" name="categoryId" [(ngModel)]="product.categoryId" required>
-                    <option [ngValue]="undefined" disabled selected>Select Category</option>
-                    <option *ngFor="let category of categories" [ngValue]="category.id">{{category.name}}</option>
-                </select>
-            </div>
-        </div>
+
 
         <div class="row">
             <div class="col-md-6 mb-4">

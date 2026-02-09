@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 import { finalize } from 'rxjs/operators';
-import { BrandDto, BrandDtoPagedResultDto, BrandServiceProxy, CategoryDto, CategoryDtoPagedResultDto, CategoryServiceProxy, CreateProductDto, ProductServiceProxy } from '../../../shared/service-proxies/service-proxies';
+import { BrandDto, BrandDtoPagedResultDto, BrandServiceProxy, CategoryDto, CategoryDtoPagedResultDto, CategoryServiceProxy, CreateProductDto, ImageServiceProxy, ProductServiceProxy } from '../../../shared/service-proxies/service-proxies';
 import { AppComponentBase } from '../../../shared/app-component-base';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './create-product-dialog.component.html',
   standalone: true,
   imports: [FormsModule, CommonModule],
-  providers: [ProductServiceProxy, BrandServiceProxy, CategoryServiceProxy]
+  providers: [ProductServiceProxy, BrandServiceProxy, CategoryServiceProxy, ImageServiceProxy]
 })
 export class CreateProductDialogComponent extends AppComponentBase implements OnInit {
   saving = false;
@@ -27,7 +27,9 @@ export class CreateProductDialogComponent extends AppComponentBase implements On
     public bsModalRef: BsModalRef,
     private _productService: ProductServiceProxy,
     private _brandService: BrandServiceProxy,
-    private _categoryService: CategoryServiceProxy
+    private _categoryService: CategoryServiceProxy,
+    private _imageServiceProxy: ImageServiceProxy,
+    private _cd: ChangeDetectorRef,
   ) {
     super(injector);
   }
@@ -43,12 +45,16 @@ export class CreateProductDialogComponent extends AppComponentBase implements On
     this._brandService.getAll(undefined, 0, 1000).subscribe((result: BrandDtoPagedResultDto) => {
       this.brands = result.items;
     });
+    this._cd.detectChanges();
+
   }
 
   loadCategories() {
     this._categoryService.getAll(undefined, 0, 1000).subscribe((result: CategoryDtoPagedResultDto) => {
       this.categories = result.items;
     });
+    this._cd.detectChanges();
+
   }
 
   onFileSelected(event: any) {
@@ -56,12 +62,8 @@ export class CreateProductDialogComponent extends AppComponentBase implements On
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        // Remove 'data:image/png;base64,' prefix if desired, or keep it depending on backend expectation.
-        // Usually backend expects just the base64 string without prefix if it's explicitly byte[] mapping, 
-        // but if it's string (as in UpdateProductDto), it might handle it or need stripping.
-        // Start with stripping the prefix for standard byte[] compatibility via base64 string.
+
         let base64String = e.target.result.toString();
-        // Simple strip of metadata
         if (base64String.indexOf(',') > 0) {
           base64String = base64String.split(',')[1];
         }

@@ -11,6 +11,7 @@ import { appModuleAnimation } from '../../shared/animations/routerTransition';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DataViewModule } from 'primeng/dataview';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-products',
@@ -60,7 +61,9 @@ export class ProductsComponent extends AppComponentBase implements OnInit {
         this.products = result.items;
         this.totalItems = result.totalCount;
         this.cd.markForCheck();
+        this.cd.detectChanges();
       });
+    console.log(`PRODUCTS`, this.products);
   }
 
   refresh(): void {
