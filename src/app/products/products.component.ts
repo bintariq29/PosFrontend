@@ -89,11 +89,13 @@ export class ProductsComponent extends AppComponentBase implements OnInit {
       this.getAllProducts();
       this.getImageUrl(product.id);
       this.cd.detectChanges();
+
     })
   }
 
   getImageUrl(product: any): string {
-    return `https://localhost:44311/api/services/app/Image/GetImageById?id=${product.id}`;
+    const timestamp = new Date().getTime();
+    return `https://localhost:44311/api/services/app/Image/GetImageById?id=${product.id}&t=${timestamp}`;
   }
 
 
