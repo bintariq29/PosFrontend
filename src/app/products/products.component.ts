@@ -67,10 +67,38 @@ export class ProductsComponent extends AppComponentBase implements OnInit {
 
 
   createProduct(): void {
+    this._modalService.show(CreateProductDialogComponent);
+    this._modalService.onHide.subscribe(() => {
+      this.getAllProducts();
+    })
   }
 
   editProduct(product: ProductDto): void {
+    const modal = this._modalService.show(EditProductDialogComponent, {
+      initialState: {
+        productDto: product.clone()
+      },
+      class: 'modal-lg',
+      backdrop: 'static',
+      keyboard: false
+
+    })
+
+
+    modal.content.onSave.subscribe(() => {
+      this.getAllProducts();
+      this.getImageUrl(product.id);
+      this.cd.detectChanges();
+    })
   }
+
+  getImageUrl(product: any): string {
+    return `https://localhost:44311/api/services/app/Image/GetImageById?id=${product.id}`;
+  }
+
+
+
+
 
 
 
