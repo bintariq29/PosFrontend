@@ -53,6 +53,7 @@ export class ProductsComponent extends AppComponentBase implements OnInit {
     ).subscribe((result: ProductDtoPagedResultDto) => {
       this.products = result.items;
       this.totalItems = result.totalCount;
+      this.cd.detectChanges();
     });
 
   }
