@@ -21,6 +21,7 @@ export class CreateProductDialogComponent extends AppComponentBase implements On
   imageDto: CreateImageDto = new CreateImageDto();
   brands: BrandDto[] = [];
   categories: CategoryDto[] = [];
+  private MaxImageSizeInBytes: number = 2 * 1024 * 1024;
 
   @Output() onSave = new EventEmitter<any>();
 
@@ -63,9 +64,19 @@ export class CreateProductDialogComponent extends AppComponentBase implements On
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      const maxSizeInMB = 2;
+      const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+
+      if (file.size > maxSizeInBytes) {
+        alert(`File is too large. Maximum allowed size is ${maxSizeInMB} MB.`);
+
+        event.target.value = '';
+        this.imageDto.imageData = null;
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e: any) => {
-
         let base64String = e.target.result.toString();
         if (base64String.indexOf(',') > 0) {
           base64String = base64String.split(',')[1];
@@ -94,7 +105,7 @@ export class CreateProductDialogComponent extends AppComponentBase implements On
 
           if (this.imageDto && this.imageDto.imageData) {
             this.imageDto.productId = createdProduct.id;
-            
+
             console.log("Saving image for Product ID:", this.imageDto.productId);
 
             this._imageServiceProxy.create(this.imageDto).subscribe({
