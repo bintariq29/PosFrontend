@@ -13,6 +13,7 @@ import { NotifyService } from '@node_modules/abp-ng2-module';
   providers: [SupplierServiceProxy, PaymentTypeServiceProxy, FinanceAccountServiceProxy, ProductServiceProxy, PurchaseProductServiceProxy]
 })
 export class PurchaseComponent implements OnInit {
+
   selectedSupplier: SupplierDto;
   selectedProduct: ProductDto;
   selectedFinanceAccount: FinanceAccountDto;
@@ -101,14 +102,11 @@ export class PurchaseComponent implements OnInit {
 
 
 
-  // Add these helper methods to your class
-  removeItem(index: number) {
-    this.purchaseProducts.splice(index, 1);
-    this.cd.detectChanges();
-  }
-
   updateRowTotal(item: PurchaseProductDto) {
-    item.totalPrice = item.quantity * item.unitPrice;
+    // Ensure we are working with numbers (prevents string concatenation)
+    const qty = Number(item.quantity) || 0;
+    const price = Number(item.unitPrice) || 0;
+    item.totalPrice = qty * price;
     this.cd.detectChanges();
   }
 
@@ -116,12 +114,22 @@ export class PurchaseComponent implements OnInit {
     return this.purchaseProducts.reduce((sum, item) => sum + (item.totalPrice || 0), 0);
   }
 
+  getTotalQuantity(): number {
+    return this.purchaseProducts.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+  }
+
+  removeItem(index: number) {
+    this.purchaseProducts.splice(index, 1);
+    this.notifyService.info('Item removed from list');
+    this.cd.detectChanges();
+  }
+
   getImageUrl(product: any): string {
     const timestamp = new Date().getTime();
-    // Use product.id (which will be the productId in our case)
     return `https://localhost:44311/api/services/app/Image/GetImageById?id=${product.id}&t=${timestamp}`;
   }
 
+  onProcessPurchase() { }
 
 
 
