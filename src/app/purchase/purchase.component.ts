@@ -2,15 +2,16 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@node_modules/@angular/common';
 import { FormsModule } from '@node_modules/@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
-import { FinanceAccountDto, FinanceAccountServiceProxy, PaymentTypeDto, PaymentTypeServiceProxy, ProductDto, ProductServiceProxy, PurchaseProductDto, PurchaseProductServiceProxy, SupplierDto, SupplierServiceProxy } from '@shared/service-proxies/service-proxies';
+import { FinanceAccountDto, FinanceAccountServiceProxy, PaymentTypeDto, PaymentTypeServiceProxy, ProductDto, ProductServiceProxy, PurchaseProductDto, PurchaseProductServiceProxy, StockServiceProxy, SupplierDto, SupplierServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { NotifyService } from '@node_modules/abp-ng2-module';
+import { result } from '@node_modules/@types/lodash';
 
 @Component({
   selector: 'app-purchase',
   imports: [CommonModule, FormsModule],
   templateUrl: './purchase.component.html',
-  providers: [SupplierServiceProxy, PaymentTypeServiceProxy, FinanceAccountServiceProxy, ProductServiceProxy, PurchaseProductServiceProxy]
+  providers: [SupplierServiceProxy, PaymentTypeServiceProxy, FinanceAccountServiceProxy, ProductServiceProxy, PurchaseProductServiceProxy, StockServiceProxy]
 })
 export class PurchaseComponent implements OnInit {
 
@@ -33,6 +34,7 @@ export class PurchaseComponent implements OnInit {
     private productProxy: ProductServiceProxy,
     private paymentTypeProxy: PaymentTypeServiceProxy,
     private notifyService: NotifyService,
+    private stockServiceProxy: StockServiceProxy
 
   ) {
   }
@@ -42,6 +44,8 @@ export class PurchaseComponent implements OnInit {
     this.loadFinanceAccounts();
     this.loadPaymentType();
   }
+
+
 
   loadSuppliers() {
     this.supplierProxy.getAll(undefined, 0, 10).subscribe((result) => {
@@ -84,20 +88,30 @@ export class PurchaseComponent implements OnInit {
     if (existingItem) {
       this.notifyService.error('This product has already been added to the list.', 'Duplicate Item');
     } else {
-      const newPurchaseProduct = new PurchaseProductDto();
-      newPurchaseProduct.productId = product.id;
-      newPurchaseProduct.unitPrice = product.price;
-      newPurchaseProduct.quantity = 1;
-      newPurchaseProduct.totalPrice = product.price * newPurchaseProduct.quantity;
-      newPurchaseProduct.batchNo = 1;
-      newPurchaseProduct.productName = product.name;
-      this.purchaseProducts.push(newPurchaseProduct);
-      console.log(this.purchaseProducts);
+
+      this.stockServiceProxy.getLatestBatchNoByProductId(product.id).subscribe((result) => {
+
+        const newPurchaseProduct = new PurchaseProductDto();
+        newPurchaseProduct.productId = product.id;
+        newPurchaseProduct.unitPrice = product.price;
+        newPurchaseProduct.quantity = 1;
+        newPurchaseProduct.totalPrice = product.price * 1;
+        newPurchaseProduct.productName = product.name;
+
+        if (result != null && result != -1) {
+          newPurchaseProduct.batchNo = result + 1;
+        } else {
+          newPurchaseProduct.batchNo = 1; // first batch
+        }
+
+        this.purchaseProducts.push(newPurchaseProduct);
+        console.log(this.purchaseProducts);
+
+        this.cd.detectChanges();
+      });
     }
 
     this.selectedProduct = undefined;
-
-    this.cd.detectChanges();
   }
 
 
@@ -140,6 +154,12 @@ export class PurchaseComponent implements OnInit {
 
   onPaymentTypeChange() {
     this.selectedFinanceAccount = undefined;
+    this.financeAccountProxy.getAccountsByPaymentType(this.selectedPaymentType.id).subscribe((result) => {
+      this.financeAccountList = result
+      this.cd.detectChanges();
+    })
+
+
   }
 
 
