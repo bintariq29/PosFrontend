@@ -101,12 +101,21 @@
                         <span class="badge border border-dark text-dark fw-bold">Batch: {{item.batchNo}}</span>
                     </div>
 
-                    <div class="bg-light p-2 rounded-3 border border-dark mb-3">
-                        <div class="d-flex justify-content-between small">
-                            <span class="fw-bold text-muted">UNIT PRICE:</span>
-                            <span class="fw-bold text-dark">${{item.unitPrice | number:'1.2-2'}}</span>
+
+                    <div>
+                        <label class="small fw-bold text-uppercase" style="font-size: 0.65rem;">Unit Price</label>
+                        <div class="input-group input-group-sm">
+                            <input type="number" class="form-control border-2 border-dark border-end-0 shadow-none"
+                                [(ngModel)]="item.unitPrice" (input)="updateRowTotal(item)" min="1">
+                            <span class="input-group-text border-2 border-dark bg-light fw-bold text-muted px-2"
+                                style="width: 35px; justify-content: center; font-size: 0.75rem;">
+                                $
+                            </span>
                         </div>
                     </div>
+
+
+
 
                     <div class="row g-2 mb-3">
                         <div class="col-5">
