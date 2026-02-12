@@ -99,6 +99,27 @@ export class ProductsComponent extends AppComponentBase implements OnInit {
   }
 
 
+  deleteProduct(product: ProductDto): void {
+    abp.message.confirm(
+      `Are you sure you want to delete the product "${product.name}"?`,
+      'Delete Confirmation',
+      (result: boolean) => {
+        if (result) {
+          this._productService.delete(product.id)
+            .pipe(finalize(() => this.cd.detectChanges()))
+            .subscribe(() => {
+              this.notify.success('Product deleted successfully');
+              this.getAllProducts(); // refresh list
+            }, (error) => {
+              this.notify.error('Error deleting product');
+              console.error(error);
+            });
+        }
+      }
+    );
+  }
+
+
 
 
 
