@@ -1,150 +1,106 @@
-<div class="container-fluid p-4"
-    style="background-color: #f8f9fa; min-height: 100vh; font-family: 'Inter', sans-serif;">
+<div class="container-fluid p-4 rounded-3 shadow-lg"
+    style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh;">
 
-    <div class="row mb-4 align-items-center">
-        <div class="col-md-12">
-
-            <h2 class="h4 fw-bold text-dark mb-1">
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h4 class="text-dark fw-bolder mb-1" style="letter-spacing: -1px;">
                 <i class="pi pi-shopping-cart me-2 text-primary"></i>Purchase Management
-            </h2>
-            <p class="text-muted mb-0">Create new purchase orders and manage stock entry</p>
+            </h4>
+            <p class="text-muted small mb-0 ms-4 ps-2">Create new purchase orders and manage stock entry</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <button class="btn btn-outline-dark fw-bold px-4 shadow-sm me-2 mx-2" (click)=" purchaseProducts=[]">Clear
+                List</button>
+            <button class="btn btn-primary fw-bold px-4 shadow-sm mx-2">Process Purchase</button>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-body p-4">
-            <div class="row g-4">
-
-                <div class="col-md-4">
-                    <label class="form-label fw-semibold text-secondary small text-uppercase mb-2">
-                        Supplier Details
-                    </label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0"><i
-                                class="pi pi-truck text-muted"></i></span>
-                        <select class="form-select border-start-0 bg-light" [(ngModel)]="selectedSupplier"
-                            name="supplierId" required>
-                            <option [ngValue]="undefined" disabled selected>Choose Supplier...</option>
-                            <option *ngFor="let s of suppliersList" [ngValue]="s">{{s.name}}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label fw-semibold text-secondary small text-uppercase mb-2">
-                        Payment Account
-                    </label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0"><i
-                                class="pi pi-wallet text-muted"></i></span>
-                        <select class="form-select border-start-0 bg-light" [(ngModel)]="selectedFinanceAccount"
-                            name="accountId" required>
-                            <option [ngValue]="undefined" disabled selected>Select Account...</option>
-                            <option *ngFor="let a of financeAccountList" [ngValue]="a">{{a.accountName}}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label fw-semibold text-secondary small text-uppercase mb-2">
-                        Target Product
-                    </label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0"><i class="pi pi-box text-muted"></i></span>
-                        <select class="form-select border-start-0 bg-light" [(ngModel)]="selectedProduct"
-                            (change)="onProductSelect()" name="productId" required>
-                            <option [ngValue]="undefined" disabled selected>Select Product...</option>
-                            <option *ngFor="let p of productList" [ngValue]="p">{{p.name}}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-12 mt-4">
-                    <label class="form-label fw-semibold text-secondary small text-uppercase mb-2">
-                        Order Notes & Remarks
-                    </label>
-                    <textarea id="remarks" class="form-control bg-light" [(ngModel)]="remarks" name="remarks"
-                        placeholder="Add any internal notes here..." rows="3"
-                        style="resize: none; border-radius: 10px;"></textarea>
-                </div>
-            </div>
+    <div class="row g-4 my-4">
+        <div class="col-md-4">
+            <label class="form-label fw-bold text-dark text-uppercase mx-2">Suppliers</label>
+            <select class="form-select shadow-sm border-2 border-dark" [(ngModel)]="selectedSupplier">
+                <option [ngValue]="undefined" disabled selected>Choose Supplier</option>
+                <option *ngFor="let s of suppliersList" [ngValue]="s">{{s.name}}</option>
+            </select>
         </div>
 
-        <div class="row g-4 mt-2">
-            <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let item of purchaseProducts; let i = index">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative">
+        <div class="col-md-4">
+            <label class="form-label fw-bold text-dark text-uppercase mx-2 ">Finance Account</label>
+            <select class="form-select shadow-sm border-2 border-dark" [(ngModel)]="selectedFinanceAccount">
+                <option [ngValue]="undefined" disabled selected>Select Account</option>
+                <option *ngFor="let a of financeAccountList" [ngValue]="a">{{a.accountName}}</option>
+            </select>
+        </div>
 
-                    <button
-                        class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 z-index-1 rounded-circle shadow"
-                        (click)="removeItem(i)" style="width: 32px; height: 32px; padding: 0;">
-                        <i class="pi pi-times"></i>
+        <div class="col-md-4">
+            <label class="form-label fw-bold text-dark text-uppercase  mx-2">Product</label>
+            <select class="form-select shadow-sm border-2 border-dark" [(ngModel)]="selectedProduct"
+                (change)="onProductSelect()">
+                <option [ngValue]="undefined" disabled selected>Select Product</option>
+                <option *ngFor="let p of productList" [ngValue]="p">{{p.name}}</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="row g-4">
+        <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let item of purchaseProducts; let i = index">
+            <div class="card h-100 shadow-sm rounded-4 overflow-hidden border-2 border-dark">
+
+                <div class="position-relative bg-light" style="min-height: 200px;">
+                    <div class="d-flex justify-content-center align-items-center h-100 position-absolute w-100">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <div class="mt-2 small text-muted">Loading...</div>
+                        </div>
+                    </div>
+                    <img [src]="getImageUrl({id: item.productId})" class="card-img-top d-none object-fit-cover"
+                        style="height: 200px;" alt="{{item.productName}}"
+                        onload="this.classList.remove('d-none'); this.previousElementSibling.remove();"
+                        onerror="this.classList.remove('d-none'); this.previousElementSibling.remove(); this.src='/assets/no-image.png';">
+                </div>
+
+                <div class="card-body d-flex flex-column bg-white">
+                    <h5 class="card-title fw-bold mb-1 text-truncate" title="{{item.productName}}">{{item.productName}}
+                    </h5>
+                    <p class="mb-2 small text-muted font-monospace">ID: #{{item.productId}}</p>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="small fw-bold">Qty</label>
+                            <input type="number" class="form-control form-control-sm border-2 border-dark"
+                                [(ngModel)]="item.quantity" (change)="updateRowTotal(item)">
+                        </div>
+                        <div class="col-6">
+                            <label class="small fw-bold">Batch</label>
+                            <input type="number" class="form-control form-control-sm border-2 border-dark"
+                                [(ngModel)]="item.batchNo">
+                        </div>
+                    </div>
+
+                    <div class="mt-auto border-top pt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="small text-muted">Total:</span>
+                            <span class="fw-bold text-success fs-5">${{item.totalPrice | number:'1.2-2'}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-light border-0 d-flex gap-2 pt-0">
+                    <button class="btn btn-sm btn-outline-danger w-100 mb-2 fw-bold" (click)="removeItem(i)">
+                        <i class="pi pi-trash me-1"></i> Remove
                     </button>
-
-                    <div class="position-relative bg-light" style="height: 180px;">
-                        <div class="d-flex justify-content-center align-items-center h-100 position-absolute w-100">
-                            <div class="text-center">
-                                <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-                                <div class="mt-2 small text-muted" style="font-size: 0.7rem;">Loading...</div>
-                            </div>
-                        </div>
-
-                        <img [src]="getImageUrl({id: item.productId})"
-                            class="card-img-top d-none h-100 object-fit-cover" alt="{{item.productName}}"
-                            onload="this.classList.remove('d-none'); this.previousElementSibling.remove();"
-                            onerror="this.classList.remove('d-none'); this.previousElementSibling.remove(); this.src='assets/img/placeholder.png';">
-                    </div>
-
-                    <div class="card-body p-3">
-                        <div class="mb-2">
-                            <span class="badge bg-primary-subtle text-primary mb-1">ID: #{{item.productId}}</span>
-                            <h6 class="fw-bold text-dark mb-0 text-truncate">{{item.productName}}</h6>
-                        </div>
-
-                        <div class="row g-2 mb-3">
-                            <div class="col-6">
-                                <label class="small text-muted mb-1">Quantity</label>
-                                <input type="number" class="form-control form-control-sm bg-light border-0"
-                                    [(ngModel)]="item.quantity" (change)="updateRowTotal(item)" min="1">
-                            </div>
-                            <div class="col-6">
-                                <label class="small text-muted mb-1">Batch No</label>
-                                <input type="number" class="form-control form-control-sm bg-light border-0"
-                                    [(ngModel)]="item.batchNo">
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
-                            <div class="text-start">
-                                <p class="small text-muted mb-0">Total Price</p>
-                                <span class="fw-bold text-primary">${{item.totalPrice | number:'1.2-2'}}</span>
-                            </div>
-                            <div class="text-end">
-                                <p class="small text-muted mb-0">Unit Price</p>
-                                <span class="fw-semibold text-dark">${{item.unitPrice | number:'1.2-2'}}</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="row mt-4" *ngIf="purchaseProducts.length > 0">
-            <div class="col-12">
-                <div class="card border-0 bg-primary text-white rounded-4 shadow">
-                    <div class="card-body d-flex justify-content-between align-items-center p-4">
-                        <div>
-                            <h5 class="mb-0 fw-bold">Grand Total Summary</h5>
-                            <p class="mb-0 opacity-75">Total items: {{purchaseProducts.length}}</p>
-                        </div>
-                        <h2 class="mb-0 fw-bolder">${{calculateGrandTotal() | number:'1.2-2'}}</h2>
-                    </div>
-                </div>
+    <div class="fixed-bottom p-4 d-flex justify-content-end pointer-events-none" *ngIf="purchaseProducts.length > 0">
+        <div class="card border-2 border-dark shadow-lg bg-white p-3 shadow" style="min-width: 250px;">
+            <div class="text-center">
+                <div class="small fw-bold text-uppercase text-muted">Grand Total</div>
+                <div class="h3 fw-bolder text-primary mb-0">${{calculateGrandTotal() | number:'1.2-2'}}</div>
             </div>
-        </div>
-
-        <div class="card-footer bg-white border-top-0 p-4 pt-0 d-flex justify-content-end">
-            <button class="btn btn-light me-2 px-4">Cancel</button>
-            <button class="btn btn-primary px-4 fw-bold">Process Purchase</button>
         </div>
     </div>
 </div>
