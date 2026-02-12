@@ -95,7 +95,7 @@ export class PurchaseComponent implements OnInit {
       console.log(this.purchaseProducts);
     }
 
-    this.selectedProduct = null;
+    this.selectedProduct = undefined;
 
     this.cd.detectChanges();
   }
@@ -132,6 +132,14 @@ export class PurchaseComponent implements OnInit {
 
   onProcessPurchase() {
 
+  }
+
+  onSupplierChange() {
+
+  }
+
+  onPaymentTypeChange() {
+    this.selectedFinanceAccount = undefined;
   }
 
 

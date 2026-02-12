@@ -22,44 +22,56 @@
 
     <div class="row g-4 my-4">
         <div class="col-md-3 d-flex flex-column">
-            <label class="form-label fw-bold text-dark text-uppercase  d-block">Suppliers</label>
-            <select class="form-select shadow border-2 border-dark" [(ngModel)]="selectedSupplier">
+            <label class="form-label fw-bold text-dark text-uppercase d-block">
+                Suppliers
+                <i *ngIf="!selectedSupplier" class="pi pi-asterisk text-danger small"></i>
+                <i *ngIf="selectedSupplier" class="pi pi-check-circle text-success small"></i>
+            </label>
+            <select class="form-select shadow border-2 border-dark" [(ngModel)]="selectedSupplier"
+                (change)="onSupplierChange()">
                 <option [ngValue]="undefined" disabled selected>Choose Supplier</option>
                 <option *ngFor="let s of suppliersList" [ngValue]="s">{{s.name}}</option>
             </select>
         </div>
 
         <div class="col-md-3 d-flex flex-column">
-            <label class="form-label fw-bold text-dark text-uppercase  d-block">Finance Account</label>
-            <select class="form-select shadow border-2 border-dark" [(ngModel)]="selectedFinanceAccount">
+            <label class="form-label fw-bold text-uppercase d-block"
+                [ngClass]="selectedSupplier ? 'text-dark' : 'text-muted opacity-50'">
+                Payment Type
+                <i *ngIf="selectedSupplier && !selectedPaymentType" class="pi pi-asterisk text-danger small"></i>
+            </label>
+            <select class="form-select shadow border-2 border-dark" [(ngModel)]="selectedPaymentType"
+                [disabled]="!selectedSupplier" (change)="onPaymentTypeChange()">
+                <option [ngValue]="undefined" disabled selected>Select Payment Type</option>
+                <option *ngFor="let a of paymentTypeList" [ngValue]="a">{{a.name}}</option>
+            </select>
+        </div>
+
+        <div class="col-md-3 d-flex flex-column">
+            <label class="form-label fw-bold text-uppercase d-block"
+                [ngClass]="selectedPaymentType ? 'text-dark' : 'text-muted opacity-50'">
+                Finance Account
+                <i *ngIf="selectedPaymentType && !selectedFinanceAccount" class="pi pi-asterisk text-danger small"></i>
+            </label>
+            <select class="form-select shadow border-2 border-dark" [(ngModel)]="selectedFinanceAccount"
+                [disabled]="!selectedPaymentType">
                 <option [ngValue]="undefined" disabled selected>Select Account</option>
                 <option *ngFor="let a of financeAccountList" [ngValue]="a">{{a.accountName}}</option>
             </select>
         </div>
 
         <div class="col-md-3 d-flex flex-column">
-            <label class="form-label fw-bold text-dark text-uppercase d-block">Product</label>
+            <label class="form-label fw-bold text-uppercase d-block"
+                [ngClass]="selectedFinanceAccount ? 'text-dark' : 'text-muted opacity-50'">
+                Product
+                <i *ngIf="selectedFinanceAccount && !selectedProduct" class="pi pi-asterisk text-danger small"></i>
+            </label>
             <select class="form-select shadow border-2 border-dark" [(ngModel)]="selectedProduct"
-                (ngModelChange)="onProductSelect($event)">
-                <option [ngValue]="null" disabled>Select Product</option>
+                [disabled]="!selectedFinanceAccount" (ngModelChange)="onProductSelect($event)">
+                <option [ngValue]="undefined" disabled selected>Select Product</option>
                 <option *ngFor="let p of productList" [ngValue]="p">{{p.name}}</option>
             </select>
         </div>
-
-
-        <div class="col-md-3 d-flex flex-column">
-            <label class="form-label fw-bold text-dark text-uppercase  d-block">Payment Type</label>
-            <select class="form-select shadow border-2 border-dark" [(ngModel)]="selectedFinanceAccount">
-                <option [ngValue]="undefined" disabled selected>Select Account</option>
-                <option *ngFor="let a of financeAccountList" [ngValue]="a">{{a.accountName}}</option>
-            </select>
-        </div>
-
-
-
-
-
-
     </div>
 
     <div class="row g-4">
