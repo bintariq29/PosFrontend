@@ -74,28 +74,29 @@ export class PurchaseComponent implements OnInit {
   purchaseProducts: PurchaseProductDto[] = [];
 
 
-  onProductSelect() {
-    if (!this.selectedProduct || !(this.selectedProduct instanceof ProductDto)) {
+  onProductSelect(product: ProductDto | null) {
+    if (!product) {
       return;
     }
 
-    const existingItem = this.purchaseProducts.find(p => p.productId === this.selectedProduct.id);
+    const existingItem = this.purchaseProducts.find(p => p.productId === product.id);
 
     if (existingItem) {
-      this.notifyService.warn('This product has already been added to the list.', 'Duplicate Item');
+      this.notifyService.error('This product has already been added to the list.', 'Duplicate Item');
     } else {
       const newPurchaseProduct = new PurchaseProductDto();
-
-      newPurchaseProduct.productId = this.selectedProduct.id;
-      newPurchaseProduct.unitPrice = this.selectedProduct.price;
+      newPurchaseProduct.productId = product.id;
+      newPurchaseProduct.unitPrice = product.price;
       newPurchaseProduct.quantity = 1;
-      newPurchaseProduct.totalPrice = newPurchaseProduct.unitPrice * newPurchaseProduct.quantity;
+      newPurchaseProduct.totalPrice = product.price * newPurchaseProduct.quantity;
       newPurchaseProduct.batchNo = 1;
-      newPurchaseProduct.productName = this.selectedProduct.name
+      newPurchaseProduct.productName = product.name;
       this.purchaseProducts.push(newPurchaseProduct);
       console.log(this.purchaseProducts);
     }
-    this.selectedProduct = undefined;
+
+    this.selectedProduct = null;
+
     this.cd.detectChanges();
   }
 
@@ -129,7 +130,9 @@ export class PurchaseComponent implements OnInit {
     return `https://localhost:44311/api/services/app/Image/GetImageById?id=${product.id}&t=${timestamp}`;
   }
 
-  onProcessPurchase() { }
+  onProcessPurchase() {
+
+  }
 
 
 
