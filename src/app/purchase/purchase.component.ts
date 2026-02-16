@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@node_modules/@angular/common';
 import { FormsModule } from '@node_modules/@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
-import { FinanceAccountDto, FinanceAccountServiceProxy, PaymentTypeDto, PaymentTypeServiceProxy, ProductDto, ProductServiceProxy, PurchaseProductDto, PurchaseProductServiceProxy, StockServiceProxy, SupplierDto, SupplierServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CreatePurchaseDto, CreatePurchaseProductDto, FinanceAccountDto, FinanceAccountServiceProxy, PaymentTypeDto, PaymentTypeServiceProxy, ProductDto, ProductServiceProxy, PurchaseInputDto, PurchaseServiceProxy, StockServiceProxy, SupplierDto, SupplierServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { NotifyService } from '@node_modules/abp-ng2-module';
 import { result } from '@node_modules/@types/lodash';
@@ -11,7 +11,7 @@ import { result } from '@node_modules/@types/lodash';
   selector: 'app-purchase',
   imports: [CommonModule, FormsModule],
   templateUrl: './purchase.component.html',
-  providers: [SupplierServiceProxy, PaymentTypeServiceProxy, FinanceAccountServiceProxy, ProductServiceProxy, PurchaseProductServiceProxy, StockServiceProxy]
+  providers: [SupplierServiceProxy, PaymentTypeServiceProxy, FinanceAccountServiceProxy, ProductServiceProxy, StockServiceProxy, PurchaseServiceProxy]
 })
 export class PurchaseComponent implements OnInit {
 
@@ -24,6 +24,7 @@ export class PurchaseComponent implements OnInit {
   productList: ProductDto[]
   financeAccountList: FinanceAccountDto[]
   paymentTypeList: PaymentTypeDto[]
+  purchaseInputDto: PurchaseInputDto
 
 
 
@@ -34,7 +35,8 @@ export class PurchaseComponent implements OnInit {
     private productProxy: ProductServiceProxy,
     private paymentTypeProxy: PaymentTypeServiceProxy,
     private notifyService: NotifyService,
-    private stockServiceProxy: StockServiceProxy
+    private stockServiceProxy: StockServiceProxy,
+    private purchaseServiceProxy: PurchaseServiceProxy
 
   ) {
   }
@@ -75,7 +77,7 @@ export class PurchaseComponent implements OnInit {
     })
   }
 
-  purchaseProducts: PurchaseProductDto[] = [];
+  purchaseProducts: CreatePurchaseProductDto[] = [];
 
 
   onProductSelect(product: ProductDto | null) {
@@ -91,7 +93,7 @@ export class PurchaseComponent implements OnInit {
 
       this.stockServiceProxy.getLatestBatchNoByProductId(product.id).subscribe((result) => {
 
-        const newPurchaseProduct = new PurchaseProductDto();
+        const newPurchaseProduct = new CreatePurchaseProductDto();
         newPurchaseProduct.productId = product.id;
         newPurchaseProduct.unitPrice = product.price;
         newPurchaseProduct.quantity = 1;
@@ -101,7 +103,7 @@ export class PurchaseComponent implements OnInit {
         if (result != null && result != -1) {
           newPurchaseProduct.batchNo = result + 1;
         } else {
-          newPurchaseProduct.batchNo = 1; // first batch
+          newPurchaseProduct.batchNo = 1;
         }
 
         this.purchaseProducts.push(newPurchaseProduct);
@@ -117,8 +119,7 @@ export class PurchaseComponent implements OnInit {
 
 
 
-  updateRowTotal(item: PurchaseProductDto) {
-    // Ensure we are working with numbers (prevents string concatenation)
+  updateRowTotal(item: CreatePurchaseProductDto) {
     const qty = Number(item.quantity) || 0;
     const price = Number(item.unitPrice) || 0;
     item.totalPrice = qty * price;
@@ -145,12 +146,45 @@ export class PurchaseComponent implements OnInit {
   }
 
   onProcessPurchase() {
+    alert();
+    // 1. Validation (Bilkul sahi hai aapki)
+    if (!this.selectedSupplier || this.purchaseProducts.length === 0 || !this.selectedFinanceAccount) {
+      this.notifyService.warn('Please select Supplier, Finance Account and add at least one product.');
+      return;
+    }
+
+    // 2. Pehle poore dabba (InputDto) ko initialize karein
+    this.purchaseInputDto = new PurchaseInputDto(); // <--- YE LINE ZAROORI HAI
+
+    // 3. Purchase data set karein
+    const purchase = new CreatePurchaseDto();
+    purchase.suplierId = this.selectedSupplier.id;
+    purchase.invoiceNumber = ''; // Backend handle kar lega, par khali string dena safe hai
+    purchase.totalAmount = this.calculateGrandTotal();
+    purchase.remarks = this.remarks;
+    purchase.financeAccountId = this.selectedFinanceAccount.id;
+    purchase.status = 'Pending';
+
+    // 4. Data assign karein
+    this.purchaseInputDto.purchase = purchase;
+    this.purchaseInputDto.products = this.purchaseProducts;
+
+    console.log('Final Input Dto Products:', this.purchaseInputDto);
+
+    this.purchaseServiceProxy.addPurchaseRequest(this.purchaseInputDto).subscribe({
+      next: (result) => {
+        this.notifyService.success('Successfully Created!');
+        this.resetForm();
+
+      },
+      error: (err) => {
+        this.notifyService.error('Error: ' + err.message);
+      }
+    });
 
   }
 
-  onSupplierChange() {
 
-  }
 
   onPaymentTypeChange() {
     this.selectedFinanceAccount = undefined;
@@ -161,7 +195,23 @@ export class PurchaseComponent implements OnInit {
 
 
   }
+  resetForm() {
 
+    this.selectedSupplier = undefined;
+    this.selectedFinanceAccount = undefined;
+    this.purchaseProducts = [];
+
+    this.purchaseInputDto = new PurchaseInputDto();
+    this.purchaseInputDto.purchase = new CreatePurchaseDto();
+    this.selectedProduct = undefined;
+    this.cd.detectChanges();
+  }
+
+
+
+  onSupplierChange() {
+
+  }
 
 
 
