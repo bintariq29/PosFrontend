@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PurchaseComponent } from './purchase.component'
+import { CreatePurchaseComponent } from './create-purchase/create-purchase.component';
 
 const routes: Routes = [
   {
-     path: "",
-        component: PurchaseComponent,
-        pathMatch: "full"
+    path: "",
+    component: CreatePurchaseComponent,
+    pathMatch: "full"
   }
 ];
 
