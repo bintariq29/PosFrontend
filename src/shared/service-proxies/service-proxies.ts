@@ -2296,6 +2296,120 @@ export class PurchaseServiceProxy {
     }
 
     /**
+     * @return OK
+     */
+    getAllPurchases(): Observable<PurchaseOutputDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Purchase/GetAllPurchases";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllPurchases(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAllPurchases(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PurchaseOutputDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PurchaseOutputDto[]>;
+        }));
+    }
+
+    protected processGetAllPurchases(response: HttpResponseBase): Observable<PurchaseOutputDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(PurchaseOutputDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param purchaseId (optional) 
+     * @return OK
+     */
+    getPurchaseByPurchaseId(purchaseId: number | undefined): Observable<PurchaseOutputDto> {
+        let url_ = this.baseUrl + "/api/services/app/Purchase/GetPurchaseByPurchaseId?";
+        if (purchaseId === null)
+            throw new Error("The parameter 'purchaseId' cannot be null.");
+        else if (purchaseId !== undefined)
+            url_ += "purchaseId=" + encodeURIComponent("" + purchaseId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPurchaseByPurchaseId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPurchaseByPurchaseId(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PurchaseOutputDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PurchaseOutputDto>;
+        }));
+    }
+
+    protected processGetPurchaseByPurchaseId(response: HttpResponseBase): Observable<PurchaseOutputDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PurchaseOutputDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param id (optional) 
      * @return OK
      */
@@ -6998,6 +7112,8 @@ export class PurchaseDto implements IPurchaseDto {
     remarks: string | undefined;
     financeAccountId: number;
     status: string | undefined;
+    supplierName: string | undefined;
+    financeAccountName: string | undefined;
 
     constructor(data?: IPurchaseDto) {
         if (data) {
@@ -7017,6 +7133,8 @@ export class PurchaseDto implements IPurchaseDto {
             this.remarks = _data["remarks"];
             this.financeAccountId = _data["financeAccountId"];
             this.status = _data["status"];
+            this.supplierName = _data["supplierName"];
+            this.financeAccountName = _data["financeAccountName"];
         }
     }
 
@@ -7036,6 +7154,8 @@ export class PurchaseDto implements IPurchaseDto {
         data["remarks"] = this.remarks;
         data["financeAccountId"] = this.financeAccountId;
         data["status"] = this.status;
+        data["supplierName"] = this.supplierName;
+        data["financeAccountName"] = this.financeAccountName;
         return data;
     }
 
@@ -7055,6 +7175,8 @@ export interface IPurchaseDto {
     remarks: string | undefined;
     financeAccountId: number;
     status: string | undefined;
+    supplierName: string | undefined;
+    financeAccountName: string | undefined;
 }
 
 export class PurchaseDtoPagedResultDto implements IPurchaseDtoPagedResultDto {
@@ -7165,6 +7287,140 @@ export class PurchaseInputDto implements IPurchaseInputDto {
 export interface IPurchaseInputDto {
     purchase: CreatePurchaseDto;
     products: CreatePurchaseProductDto[] | undefined;
+}
+
+export class PurchaseOutputDto implements IPurchaseOutputDto {
+    purchase: PurchaseDto;
+    products: PurchaseProductDto[] | undefined;
+
+    constructor(data?: IPurchaseOutputDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.purchase = _data["purchase"] ? PurchaseDto.fromJS(_data["purchase"]) : <any>undefined;
+            if (Array.isArray(_data["products"])) {
+                this.products = [] as any;
+                for (let item of _data["products"])
+                    this.products.push(PurchaseProductDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PurchaseOutputDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchaseOutputDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["purchase"] = this.purchase ? this.purchase.toJSON() : <any>undefined;
+        if (Array.isArray(this.products)) {
+            data["products"] = [];
+            for (let item of this.products)
+                data["products"].push(item.toJSON());
+        }
+        return data;
+    }
+
+    clone(): PurchaseOutputDto {
+        const json = this.toJSON();
+        let result = new PurchaseOutputDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPurchaseOutputDto {
+    purchase: PurchaseDto;
+    products: PurchaseProductDto[] | undefined;
+}
+
+export class PurchaseProductDto implements IPurchaseProductDto {
+    id: number;
+    purchaseId: number;
+    productId: number;
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+    batchNo: number;
+    expiryDate: moment.Moment | undefined;
+    remarks: string | undefined;
+    productName: string | undefined;
+
+    constructor(data?: IPurchaseProductDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.purchaseId = _data["purchaseId"];
+            this.productId = _data["productId"];
+            this.quantity = _data["quantity"];
+            this.unitPrice = _data["unitPrice"];
+            this.totalPrice = _data["totalPrice"];
+            this.batchNo = _data["batchNo"];
+            this.expiryDate = _data["expiryDate"] ? moment(_data["expiryDate"].toString()) : <any>undefined;
+            this.remarks = _data["remarks"];
+            this.productName = _data["productName"];
+        }
+    }
+
+    static fromJS(data: any): PurchaseProductDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchaseProductDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["purchaseId"] = this.purchaseId;
+        data["productId"] = this.productId;
+        data["quantity"] = this.quantity;
+        data["unitPrice"] = this.unitPrice;
+        data["totalPrice"] = this.totalPrice;
+        data["batchNo"] = this.batchNo;
+        data["expiryDate"] = this.expiryDate ? this.expiryDate.toISOString() : <any>undefined;
+        data["remarks"] = this.remarks;
+        data["productName"] = this.productName;
+        return data;
+    }
+
+    clone(): PurchaseProductDto {
+        const json = this.toJSON();
+        let result = new PurchaseProductDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPurchaseProductDto {
+    id: number;
+    purchaseId: number;
+    productId: number;
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+    batchNo: number;
+    expiryDate: moment.Moment | undefined;
+    remarks: string | undefined;
+    productName: string | undefined;
 }
 
 export class RegisterInput implements IRegisterInput {
