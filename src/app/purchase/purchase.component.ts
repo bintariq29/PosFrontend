@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PurchaseServiceProxy } from '@shared/service-proxies/service-proxies';
 import { TableModule } from 'primeng/table';
+import { Console } from 'console';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class PurchaseComponent implements OnInit {
   rows = 10;
   totalRecords = 0;
   constructor(
-    private purchaseService: PurchaseServiceProxy
+    private purchaseService: PurchaseServiceProxy,
+    private cd: ChangeDetectorRef
   ) {
 
   }
@@ -30,8 +32,11 @@ export class PurchaseComponent implements OnInit {
 
     this.purchaseService.getAllPurchases().subscribe(result => {
       this.purchases = result;
+      console.log(this.purchases);
+
       this.totalRecords = 12;
       this.loading = false;
+      this.cd.detectChanges();
     });
   }
 
