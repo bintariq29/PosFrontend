@@ -26,7 +26,8 @@
     </div>
 
     <!-- Table Card -->
-    <div class="bg-white rounded-3 overflow-hidden shadow">
+    <!-- Table Card with horizontal scroll -->
+    <div class="bg-white rounded-3 overflow-auto shadow">
         <p-table #dataTable [value]="purchases" [rows]="rows" [totalRecords]="totalRecords" [paginator]="true"
             [lazy]="true" [loading]="loading" (onLazyLoad)="loadPurchases($event)" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} purchases"
@@ -35,72 +36,107 @@
             <!-- Header -->
             <ng-template pTemplate="header">
                 <tr class="bg-dark text-white border-0">
-                    <th class="py-3 small text-uppercase fw-bold">Id</th>
-                    <th class="py-3 small text-uppercase fw-bold">Invoice</th>
-                    <th class="py-3 small text-uppercase fw-bold">Supplier</th>
-                    <th class="py-3 small text-uppercase fw-bold">Total</th>
-                    <th class="py-3 small text-uppercase fw-bold">Account</th>
-                    <th class="py-3 small text-uppercase fw-bold">Status</th>
-                    <th class="py-3 small text-uppercase fw-bold">Created</th>
-                    <th class="py-3 small text-uppercase fw-bold">Products</th>
-                    <th class="py-3 small text-uppercase fw-bold">Actions</th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 80px; white-space: nowrap;">Id</th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 120px; white-space: nowrap;">Invoice
+                    </th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 140px; white-space: nowrap;">
+                        Supplier</th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 100px; white-space: nowrap;">Total
+                    </th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 140px; white-space: nowrap;">Account
+                    </th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 100px; white-space: nowrap;">Status
+                    </th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 140px; white-space: nowrap;">Created At
+                    </th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 140px; white-space: nowrap;">Created
+                        By</th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 160px; white-space: nowrap;">Last
+                        Modified By</th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 160px; white-space: nowrap;">Last
+                        Modified At</th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 140px; white-space: nowrap;">Deleted
+                        By</th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 160px; white-space: nowrap;">Deleted
+                        At</th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 140px; white-space: nowrap;">
+                        Products</th>
+                    <th class="py-3 small text-uppercase fw-bold" style="min-width: 140px; white-space: nowrap;">Actions
+                    </th>
                 </tr>
             </ng-template>
 
             <!-- Body -->
             <ng-template pTemplate="body" let-row>
                 <tr class="border-bottom border-light align-middle">
-
-                    <td class="py-3">{{ row.purchase.id }}</td>
-                    <td class="py-3">{{ row.purchase.invoiceNumber }}</td>
-                    <td class="py-3">{{ row.purchase.supplierName }}</td>
-                    <td class="py-3 fw-bold text-success">
+                    <td class="py-3" style="min-width: 80px; white-space: nowrap;">{{ row.purchase.id }}</td>
+                    <td class="py-3" style="min-width: 120px; white-space: nowrap;">{{ row.purchase.invoiceNumber }}
+                    </td>
+                    <td class="py-3" style="min-width: 140px; white-space: nowrap;">{{ row.purchase.supplierName }}</td>
+                    <td class="py-3 fw-bold text-success" style="min-width: 100px; white-space: nowrap;">
                         {{ row.purchase.totalAmount | currency:'PKR ' }}
                     </td>
-                    <td class="py-3">{{ row.purchase.financeAccountName }}</td>
+                    <td class="py-3" style="min-width: 140px; white-space: nowrap;">{{ row.purchase.financeAccountName
+                        }}</td>
 
                     <!-- Status Badge -->
-                    <td class="py-3">
+                    <td class="py-3" style="min-width: 100px; white-space: nowrap;">
                         <div class="d-inline-flex align-items-center px-3 py-1 rounded-pill fw-bold"
                             [ngStyle]="getStatusStyle(row.purchase.status)">
                             {{ row.purchase.status | uppercase }}
                         </div>
                     </td>
 
-                    <td class="py-3">
-                        {{ row.purchase.id | date:'short' }}
+                    <!-- Created -->
+                    <td class="py-3" style="min-width: 140px; white-space: nowrap;">
+                        {{ row.purchase.creationTime | date:'short' }}
+                    </td>
+                    <td class="py-3" style="min-width: 140px; white-space: nowrap;">
+                        {{ row.purchase.createdByName || '-' }}
                     </td>
 
-                    <!-- View Details Button -->
-                    <td class="py-3">
+                    <!-- Last Modified -->
+                    <td class="py-3" style="min-width: 160px; white-space: nowrap;">
+                        {{ row.purchase.lastModifiedByName || '-' }}
+                    </td>
+                    <td class="py-3" style="min-width: 160px; white-space: nowrap;">
+                        {{ row.purchase.lastModificationTime ? (row.purchase.lastModificationTime | date:'short') : '-'
+                        }}
+                    </td>
+
+                    <!-- Deleted -->
+                    <td class="py-3" style="min-width: 140px; white-space: nowrap;">
+                        {{ row.purchase.deletedByName || '-' }}
+                    </td>
+                    <td class="py-3" style="min-width: 160px; white-space: nowrap;">
+                        {{ row.purchase.deletionTime ? (row.purchase.deletionTime | date:'short') : '-' }}
+                    </td>
+
+                    <!-- Products -->
+                    <td class="py-3" style="min-width: 140px; white-space: nowrap;">
                         <button class="btn btn-sm btn-outline-info fw-bold px-3" (click)="viewDetails(row)">
                             View Details
                         </button>
                     </td>
 
-                    <!-- Conditional Actions -->
-                    <td class="py-3">
-
+                    <!-- Actions -->
+                    <td class="py-3" style="min-width: 140px; white-space: nowrap;">
                         <ng-container *ngIf="row.purchase.status === 'Pending' || row.purchase.status === 'Rejected'">
-
                             <button class="btn btn-sm btn-outline-success fw-bold me-2 px-3"
                                 (click)="editPurchase(row)">
                                 Edit
                             </button>
-
                             <button class="btn btn-sm btn-outline-danger fw-bold px-3" (click)="deletePurchase(row)">
                                 Delete
                             </button>
-
                         </ng-container>
-
                     </td>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="9" class="text-center py-5 text-muted">
+                    <td colspan="14" class="text-center py-5 text-muted">
                         No purchases found
                     </td>
                 </tr>

@@ -7106,6 +7106,13 @@ export interface IProductDtoPagedResultDto {
 
 export class PurchaseDto implements IPurchaseDto {
     id: number;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
     suplierId: number;
     invoiceNumber: string | undefined;
     totalAmount: number;
@@ -7114,6 +7121,9 @@ export class PurchaseDto implements IPurchaseDto {
     status: string | undefined;
     supplierName: string | undefined;
     financeAccountName: string | undefined;
+    createdByName: string | undefined;
+    lastModifiedByName: string | undefined;
+    deletedByName: string | undefined;
 
     constructor(data?: IPurchaseDto) {
         if (data) {
@@ -7127,6 +7137,13 @@ export class PurchaseDto implements IPurchaseDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
             this.suplierId = _data["suplierId"];
             this.invoiceNumber = _data["invoiceNumber"];
             this.totalAmount = _data["totalAmount"];
@@ -7135,6 +7152,9 @@ export class PurchaseDto implements IPurchaseDto {
             this.status = _data["status"];
             this.supplierName = _data["supplierName"];
             this.financeAccountName = _data["financeAccountName"];
+            this.createdByName = _data["createdByName"];
+            this.lastModifiedByName = _data["lastModifiedByName"];
+            this.deletedByName = _data["deletedByName"];
         }
     }
 
@@ -7148,6 +7168,13 @@ export class PurchaseDto implements IPurchaseDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
         data["suplierId"] = this.suplierId;
         data["invoiceNumber"] = this.invoiceNumber;
         data["totalAmount"] = this.totalAmount;
@@ -7156,6 +7183,9 @@ export class PurchaseDto implements IPurchaseDto {
         data["status"] = this.status;
         data["supplierName"] = this.supplierName;
         data["financeAccountName"] = this.financeAccountName;
+        data["createdByName"] = this.createdByName;
+        data["lastModifiedByName"] = this.lastModifiedByName;
+        data["deletedByName"] = this.deletedByName;
         return data;
     }
 
@@ -7169,6 +7199,13 @@ export class PurchaseDto implements IPurchaseDto {
 
 export interface IPurchaseDto {
     id: number;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
     suplierId: number;
     invoiceNumber: string | undefined;
     totalAmount: number;
@@ -7177,6 +7214,9 @@ export interface IPurchaseDto {
     status: string | undefined;
     supplierName: string | undefined;
     financeAccountName: string | undefined;
+    createdByName: string | undefined;
+    lastModifiedByName: string | undefined;
+    deletedByName: string | undefined;
 }
 
 export class PurchaseDtoPagedResultDto implements IPurchaseDtoPagedResultDto {
