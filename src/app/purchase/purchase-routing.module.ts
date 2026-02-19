@@ -8,7 +8,8 @@ const routes: Routes = [
     path: "",
     component: PurchaseComponent,
     pathMatch: "full"
-  }
+  },
+
 ];
 
 @NgModule({

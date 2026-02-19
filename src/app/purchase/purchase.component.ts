@@ -3,14 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PurchaseServiceProxy } from '@shared/service-proxies/service-proxies';
 import { TableModule } from 'primeng/table';
-import { Console } from 'console';
+import { Router } from '@angular/router';
 
 
 @Component({
   selector: 'app-purchase',
   imports: [CommonModule, FormsModule, TableModule],
   templateUrl: './purchase.component.html',
-  providers: [PurchaseServiceProxy]
+  providers: [PurchaseServiceProxy],
+  standalone: true
 })
 export class PurchaseComponent implements OnInit {
   purchases: any[] = [];
@@ -20,7 +21,8 @@ export class PurchaseComponent implements OnInit {
   totalRecords = 0;
   constructor(
     private purchaseService: PurchaseServiceProxy,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private router: Router
   ) {
 
   }
@@ -50,7 +52,8 @@ export class PurchaseComponent implements OnInit {
   }
 
   createPurchase(): void {
-    console.log('Create Purchase');
+    this.router.navigate(['/app/purchase/create']);
+
   }
 
   editPurchase(row: any): void {
