@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PurchaseServiceProxy } from '@shared/service-proxies/service-proxies';
 import { TableModule } from 'primeng/table';
 import { Router } from '@angular/router';
+import { AppSessionService } from '@shared/session/app-session.service';
 
 
 @Component({
@@ -19,15 +20,29 @@ export class PurchaseComponent implements OnInit {
   loading = false;
   rows = 10;
   totalRecords = 0;
+  isAdmin: boolean
   constructor(
     private purchaseService: PurchaseServiceProxy,
     private cd: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private appSessionService: AppSessionService
   ) {
 
   }
   ngOnInit(): void {
+    this.checkUserRole();
     this.loadPurchases();
+  }
+  checkUserRole() {
+    const user = this.appSessionService.user;
+    const userId = this.appSessionService.user.id;
+    console.log("USER KI ID", userId);
+    if (user.userName.toLowerCase() == 'admin') {
+      this.isAdmin = true;
+    } else {
+      this.isAdmin = false;
+    }
+    this.cd.detectChanges();
   }
   loadPurchases(event?: any): void {
     this.loading = true;

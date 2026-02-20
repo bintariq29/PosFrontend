@@ -143,7 +143,6 @@ export class CreatePurchaseComponent implements OnInit {
   }
 
   onProcessPurchase() {
-    alert();
     // 1. Validation (Bilkul sahi hai aapki)
     if (!this.selectedSupplier || this.purchaseProducts.length === 0 || !this.selectedFinanceAccount) {
       this.notifyService.warn('Please select Supplier, Finance Account and add at least one product.');
