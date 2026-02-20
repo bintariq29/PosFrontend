@@ -63,9 +63,13 @@ export class PurchaseComponent implements OnInit {
   deletePurchase(row: any): void {
     console.log('Delete Purchase', row);
   }
-
   viewDetails(row: any): void {
-    console.log('View Details', row.products);
+    console.log("Row is:", row);
+    this.router.navigate(['/app/purchase/detail'], {
+      queryParams: {
+        id: row.purchase.id
+      }
+    });
   }
 
   // Status Badge Styling

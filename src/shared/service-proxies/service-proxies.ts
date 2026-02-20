@@ -2354,15 +2354,15 @@ export class PurchaseServiceProxy {
     }
 
     /**
-     * @param purchaseId (optional) 
+     * @param id (optional) 
      * @return OK
      */
-    getPurchaseByPurchaseId(purchaseId: number | undefined): Observable<PurchaseOutputDto> {
+    getPurchaseByPurchaseId(id: number | undefined): Observable<PurchaseOutputDto> {
         let url_ = this.baseUrl + "/api/services/app/Purchase/GetPurchaseByPurchaseId?";
-        if (purchaseId === null)
-            throw new Error("The parameter 'purchaseId' cannot be null.");
-        else if (purchaseId !== undefined)
-            url_ += "purchaseId=" + encodeURIComponent("" + purchaseId) + "&";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
