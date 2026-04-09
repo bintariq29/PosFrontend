@@ -20,6 +20,20 @@ import { AppComponent } from './app.component';
                         loadChildren: () => import('./purchase/purchase.module').then((m) => m.PurchaseModule),
                         canActivate: [AppRouteGuard],
                     },
+
+                    {
+                        path: 'purchase/create',
+                        loadComponent: () => import('./purchase/create-purchase/create-purchase.component')
+                            .then(m => m.CreatePurchaseComponent),
+                        canActivate: [AppRouteGuard]
+                    },
+
+                    {
+                        path: 'purchase/detail',
+                        loadComponent: () => import('./purchase/purchase-detail/purchase-detail.component')
+                            .then(m => m.PurchaseDetailComponent),
+                        canActivate: [AppRouteGuard]
+                    },
                     {
                         path: 'about',
                         loadChildren: () => import('./about/about.module').then((m) => m.AboutModule),
